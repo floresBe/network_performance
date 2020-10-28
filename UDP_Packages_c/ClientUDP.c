@@ -161,9 +161,7 @@ void * listen_server(){
 		printf("\nserver_out: %lu\n", buffer_strct->server_out);
 		printf("\nclient_in: %lu\n", buffer_strct->client_in);
 
-		buffer_strct->time_travel = (buffer_strct->client_out - buffer_strct->client_in);
-		
-		// printf("\ntime_travel: %lu\n", buffer_strct->time_travel);
+		buffer_strct->time_travel = (buffer_strct->server_in - buffer_strct->client_out) + (buffer_strct->client_in - buffer_strct->server_out);
 
 		(times)[i_package] = (int) buffer_strct->time_travel;
 		i_package++;
@@ -194,7 +192,6 @@ double get_average(){
 	avrg = avrg/i_package;
 	printf("avrg: %f\n", avrg);
 	return avrg;
-	
 }
 
 int create_array(int **array, int c)
