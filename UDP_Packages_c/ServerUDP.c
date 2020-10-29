@@ -1,6 +1,6 @@
 // Server side implementation of UDP client-server model 
-#include <stdio.h> 
 #include <stdlib.h> 
+#include <stdio.h> 
 #include <unistd.h> 
 #include <string.h> 
 #include <sys/types.h> 
@@ -9,10 +9,12 @@
 #include <netinet/in.h> 
 #include <time.h>
   
-#define PORT     0710 
+#define PORT     6050 
 #define MAXLINE 1024
 typedef struct message_struct { char data[128]; time_t client_out; time_t client_in; time_t server_out; time_t server_in; time_t time_travel;} message_struct; 
-  
+
+static void time_convert(time_t t0, char const *tz_value);
+
 // Driver code 
 int main() { 
     int sockfd; 
@@ -49,21 +51,32 @@ int main() {
 
     len = sizeof(cliaddr);  //len is value/resuslt 
   	printf("Listening...\n");
-
-    while (1)
+	
+	while (1)
 	{
 		n = recvfrom(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct), MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 		
+		setenv("TZ", "PST8PDT", 1);
 		buffer_strct->server_in = time(NULL);
 
-		printf("\nPackage info:\n"); 
-		printf("\nmessage: %s\n", buffer_strct->data);
-		printf("\nclient_out: %lu\n", buffer_strct->client_out);
-		printf("\nserver_in: %lu\n", buffer_strct->server_in);
+		char buffer[64];
+    	struct tm *lt = localtime(&buffer_strct->server_in);
+    	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", lt);
 		
+		printf("\nPackage received:"); 
+    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)buffer_strct->server_in, buffer, "PST8PDT");	
+		// printf("\nmessage: %s\n", buffer_strct->data); 
+		
+		int n =0;	
+		while(n < 10000 * 10){
+			n++;
+			printf( "%d\r",n);
+		}
+
 		buffer_strct->server_out = time(NULL);
+
 		sendto(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct), 0, (const struct sockaddr *) &cliaddr, len);  
-		printf("Message sent.\n");
+		printf("\nMessage sent.\n");
 	}
 
 	return 0;

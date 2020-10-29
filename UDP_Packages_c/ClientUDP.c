@@ -11,7 +11,7 @@
 #include <netdb.h>
 #include <time.h>
   
-#define PORT     0710 
+#define PORT     6050 
 #define MAXLINE 1024
 
 void * listen_server();
@@ -102,20 +102,16 @@ int main(int argc, char *argv[]) {
 	clock_t start_time ;
 	clock_t end_t ; 
 	double seconds_elapsed = 0;  
-	start_time = clock();
-	// printf("start_time: %lu\n",start_time);
+	start_time = clock(); 
 	double timeout = number_packages * 0.1; //100 millisecond for every send message
 
 	// Timeout wating
     while ( seconds_elapsed < timeout * 1000) {
-		end_t = clock();
-		// seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC;
-		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000;
-		// printf( "[WAITING FOR %.0f Of %.0f SECONDS ]", seconds_elapsed, timeout);
+		end_t = clock(); 
+		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
 		printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
 		printf( "\r");
-	}
- 	// printf("\nend_t: %lu\n",end_t);
+	} 
 
 	pthread_mutex_lock(&mutex_packages_received);
 
@@ -123,8 +119,8 @@ int main(int argc, char *argv[]) {
 
 	printf("\n\nPackages sent: %d\n", number_packages);
 	printf("Packages received: %d\n", count_packages_received);
-	printf("Rate of packets received: %d\n", (count_packages_received/number_packages)*100);
-	printf("Jitter: %f\n", jitter);
+	printf("Rate of packets received: %d \n", (count_packages_received/number_packages)*100);
+	printf("Jitter: %.2f\n", jitter);
 
 	pthread_mutex_unlock(&mutex_packages_received);
 	
@@ -145,28 +141,27 @@ int main(int argc, char *argv[]) {
 void * listen_server(){
 	
 	//No more packages should be received than sent
-	while (count_packages_received < number_packages){
-		// n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
+	while (count_packages_received < number_packages){ 
 		message_struct *buffer_strct = (struct message_struct*) malloc(sizeof(struct message_struct));
 		recvfrom(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct),MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
 
-		// printf("Server message: %s\n", buffer_strct->data);
-
+		setenv("TZ", "PST8PDT", 1);
 		buffer_strct->client_in = time(NULL);
 
-		printf("\nPackage info:\n"); 
-		printf("\nmessage: %s\n", buffer_strct->data);
-		printf("\nclient_out: %lu\n", buffer_strct->client_out);
-		printf("\nserver_in: %lu\n", buffer_strct->server_in);
-		printf("\nserver_out: %lu\n", buffer_strct->server_out);
-		printf("\nclient_in: %lu\n", buffer_strct->client_in);
+		char buffer[64];
+    	struct tm *lt = localtime(&buffer_strct->server_in);
+    	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", lt);
+
+		printf("\nPackage received:\n"); 
+		printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)buffer_strct->server_in, buffer, "PST8PDT");	
+		// printf("\nmessage: %s\n", buffer_strct->data);
 
 		buffer_strct->time_travel = (buffer_strct->server_in - buffer_strct->client_out) + (buffer_strct->client_in - buffer_strct->server_out);
 
 		(times)[i_package] = (int) buffer_strct->time_travel;
-		i_package++;
+		printf("\ntime_travel[%d]: %d\n", i_package, (times)[i_package]);
 
-		printf("\ntime_travel: %d\n",(times)[i_package]);
+		i_package++;
 
 		pthread_mutex_lock(&mutex_packages_received);
 		
@@ -180,17 +175,17 @@ void * listen_server(){
 }
 
 double get_average(){
-	double avrg = 0;
+	int avrg = 0; 
 
-	for (int i = 0; i < i_package; i++)
+	for (int i = 0; i < count_packages_received - 1; i++)
 	{
-		double difference = (times)[i_package + 1] - (times)[i_package];
-		printf("difference: %f\n", difference);
+		printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
+		int difference = (times)[i + 1] - (times)[i];
+		printf("difference: %d\n", difference);
 		avrg += difference;
 	}
-	
-	avrg = avrg/i_package;
-	printf("avrg: %f\n", avrg);
+	avrg = avrg/count_packages_received;
+	// printf("avrg: %d\n", avrg);
 	return avrg;
 }
 
