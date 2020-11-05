@@ -10,6 +10,7 @@
 #include <netinet/in.h> 
 #include <netdb.h>
 #include <time.h>
+#include<json-c/json.h>
   
 #define PORT     6050 
 #define MAXLINE 1024
@@ -21,6 +22,7 @@ pthread_mutex_t mutex_packages_received;
 
 typedef struct message_struct { char data[128]; time_t client_out; time_t client_in; time_t server_out; time_t server_in; time_t time_travel;} message_struct; 
 struct message_struct *message_send;
+
 char *message[128]; 
 char message_[128];
 int size_message, number_packages, count_packages_received = 0;
@@ -74,7 +76,7 @@ int main(int argc, char *argv[]) {
 		perror("Failed to start mutex initialization");
 		exit(EXIT_FAILURE);
 	}
-
+	setenv("TZ", "PST8PDT", 1); //set TZ
 	pthread_create(&thread_listen_server, NULL, listen_server, NULL);
 
 	// Filling server information 
@@ -88,18 +90,29 @@ int main(int argc, char *argv[]) {
 	{ 
 		strcat(message_, "x"); 
 	}
-	message_struct *message_send = (struct message_struct*) malloc(sizeof(struct message_struct));
-	strcpy(message_send->data, message_);
-	printf("\nMessage: %s\n\n", message_send->data);
 
+	message_struct *message_send = (struct message_struct*) malloc(sizeof(struct message_struct));
+	// strcpy(message_send->data, message_);
+	printf("\nMessage to send: %s\n\n", message_);
+	
+	char message_json[MAXLINE];
+	char time_[MAXLINE];
 	// Sending messages number_packages times
 	for (int i = 0; i < number_packages; i++)
 	{
-		message_send->client_out = time(NULL);
-		sendto(sockfd, (struct message_struct *)message_send, sizeof(message_struct), 0, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
+		strcpy(message_json, "{ \"data\" :\"");
+		strcat(message_json, message_); 
+
+		time_t client_out = time(NULL);
+		strcat(message_json, "\", \"client_out\": "); 		
+		sprintf(time_, "%ld", client_out);
+		strcat(message_json, time_); 
+
+		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
+		printf("message_json_send: %s\n", message_json);
 	}
 
-	clock_t start_time ;
+	clock_t start_time;
 	clock_t end_t ; 
 	double seconds_elapsed = 0;  
 	start_time = clock(); 
@@ -109,8 +122,8 @@ int main(int argc, char *argv[]) {
     while ( seconds_elapsed < timeout * 1000) {
 		end_t = clock(); 
 		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
-		printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
-		printf( "\r");
+		// printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
+		// printf( "\r");
 	} 
 
 	pthread_mutex_lock(&mutex_packages_received);
@@ -124,7 +137,7 @@ int main(int argc, char *argv[]) {
 
 	pthread_mutex_unlock(&mutex_packages_received);
 	
-	//Cancel thread
+	// Cancel thread
     void *res;
 	int s = pthread_cancel(thread_listen_server);
     if (s != 0)
@@ -135,7 +148,7 @@ int main(int argc, char *argv[]) {
         perror("pthread_join");
 
 	close(sockfd); 
-    return 0; 
+	return 0; 
 }
 
 void * listen_server(){
@@ -143,22 +156,63 @@ void * listen_server(){
 	//No more packages should be received than sent
 	while (count_packages_received < number_packages){ 
 		message_struct *buffer_strct = (struct message_struct*) malloc(sizeof(struct message_struct));
-		recvfrom(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct),MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
+		// recvfrom(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct),MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
+		
+		char *message_json[1024];
+		struct json_object *server_in;
+		struct json_object *client_out;
+		struct json_object *server_out;
+		struct json_object *data;
 
-		setenv("TZ", "PST8PDT", 1);
-		buffer_strct->client_in = time(NULL);
-
-		char buffer[64];
-    	struct tm *lt = localtime(&buffer_strct->server_in);
-    	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", lt);
+		//  strcpy(message_json, "{ \"data\": \"x\", \"client_out\": 55, \"server_in\" : 55, \"server_out\" : 55 } "); 
+		recvfrom(sockfd, (char *)message_json, MAXLINE ,MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
+		time_t client_in = time(NULL);
+		
+		char current_time[64];
+    	struct tm *lt = localtime(&client_in);
+    	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 
 		printf("\nPackage received:\n"); 
-		printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)buffer_strct->server_in, buffer, "PST8PDT");	
-		// printf("\nmessage: %s\n", buffer_strct->data);
+		printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)client_in, current_time, "PST8PDT");	
+		printf("\nmessage: %s\n", message_json);
 
-		buffer_strct->time_travel = (buffer_strct->server_in - buffer_strct->client_out) + (buffer_strct->client_in - buffer_strct->server_out);
+		struct json_object *parsed_json;
+		parsed_json = json_tokener_parse(message_json);
+		json_object_object_get_ex(parsed_json, "data", &data);
+		printf("data: %s\n", json_object_get_string(data));
 
-		(times)[i_package] = (int) buffer_strct->time_travel;
+		json_object_object_get_ex(parsed_json, "client_out", &client_out);
+		printf("client_out: %d\n", json_object_get_int(client_out));
+		
+		json_object_object_get_ex(parsed_json, "server_in", &server_in);
+		printf("server_in: %d\n", json_object_get_int(server_in));
+		
+		json_object_object_get_ex(parsed_json, "server_out", &server_out);
+		printf("client_out: %d\n", json_object_get_int(server_out));
+
+		printf("client_in: %ld\n\n", client_in);
+
+		int client_out_int, server_in_int, server_out_int, client_in_int;
+		
+		server_in_int = json_object_get_int(server_in);
+		printf("server_in: %d\n", server_in_int);
+
+		client_out_int = json_object_get_int(client_out);
+		printf("client_out: %d\n", client_out_int);
+
+		 client_in_int = (long int) client_in;
+		printf("client_in: %d\n", client_in);
+
+		server_out_int = json_object_get_int(server_out);
+		printf("server_out: %d\n", server_out_int);
+
+		int time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
+		// buffer_strct->time_travel = (json_object_get_int(server_in) - json_object_get_int(client_out)) + (buffer_strct->client_in - json_object_get_int(server_out));
+
+		//buffer_strct->time_travel = (buffer_strct->server_in - buffer_strct->client_out) + (buffer_strct->client_in - buffer_strct->server_out);
+
+		// (times)[i_package] = (int) buffer_strct->time_travel; 
+		(times)[i_package] = time_travel; 
 		printf("\ntime_travel[%d]: %d\n", i_package, (times)[i_package]);
 
 		i_package++;
@@ -176,11 +230,13 @@ void * listen_server(){
 
 double get_average(){
 	int avrg = 0; 
+	
+	printf("\n");
 
 	for (int i = 0; i < count_packages_received - 1; i++)
 	{
 		printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
-		int difference = (times)[i + 1] - (times)[i];
+		int difference = (int) (times)[i + 1] - (int) (times)[i];
 		printf("difference: %d\n", difference);
 		avrg += difference;
 	}

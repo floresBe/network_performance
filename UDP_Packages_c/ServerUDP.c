@@ -8,9 +8,11 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 #include <time.h>
+#include<json-c/json.h>
   
 #define PORT     6050 
-#define MAXLINE 1024
+#define MAXLINE 1024 
+
 typedef struct message_struct { char data[128]; time_t client_out; time_t client_in; time_t server_out; time_t server_in; time_t time_travel;} message_struct; 
 
 static void time_convert(time_t t0, char const *tz_value);
@@ -50,33 +52,47 @@ int main() {
     int len, n;
 
     len = sizeof(cliaddr);  //len is value/resuslt 
+	setenv("TZ", "PST8PDT", 1); // set TZ
   	printf("Listening...\n");
 	
 	while (1)
 	{
-		n = recvfrom(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct), MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
+		char message_json[MAXLINE];
 		
-		setenv("TZ", "PST8PDT", 1);
-		buffer_strct->server_in = time(NULL);
+		n = recvfrom(sockfd, (char *)message_json, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
+		time_t server_in = time(NULL);
+		message_json[n] = '\0'; 
+		printf("\nmessage_json_received : %s\n", message_json); 
 
 		char buffer[64];
-    	struct tm *lt = localtime(&buffer_strct->server_in);
+    	struct tm *lt = localtime(&server_in);
     	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", lt);
 		
 		printf("\nPackage received:"); 
-    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)buffer_strct->server_in, buffer, "PST8PDT");	
-		// printf("\nmessage: %s\n", buffer_strct->data); 
-		
-		int n =0;	
-		while(n < 10000 * 10){
-			n++;
-			printf( "%d\r",n);
+    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)server_in, buffer, "PST8PDT");	
+
+		// Simulated time traffic
+		int n_ =0;	
+		while(n_ < 10000 * 10){
+			n_++;
+			printf( "%d\r",n_);
 		}
 
-		buffer_strct->server_out = time(NULL);
+		time_t server_out = time(NULL);
 
-		sendto(sockfd, (struct message_struct *)buffer_strct, sizeof(message_struct), 0, (const struct sockaddr *) &cliaddr, len);  
-		printf("\nMessage sent.\n");
+		char time_[128];
+		strcat(message_json, ", \"server_in\": "); 
+		sprintf(time_, "%ld", server_in);
+		strcat(message_json, time_); 
+		
+		strcat(message_json, ", \"server_out\": "); 
+		sprintf(time_, "%ld", server_out);
+		strcat(message_json, time_); 
+		
+		strcat(message_json, "} "); 
+		
+		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);  
+		printf("message_json_send: %s\n", message_json);
 	}
 
 	return 0;
