@@ -46,6 +46,7 @@ int main() {
 
     len = sizeof(cliaddr);  //len is value/resuslt 
 	setenv("TZ", "PST8PDT", 1); // set time zone
+	printf("Set time zone\n");
   	printf("Listening...\n");
 	
 	while (1)
@@ -54,21 +55,19 @@ int main() {
 		
 		n = recvfrom(sockfd, (char *)message_json, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 		time_t server_in = time(NULL);
-		message_json[n] = '\0'; 
-		// printf("\nmessage_json_received : %s\n", message_json); 
+		message_json[n] = '\0';  
 
 		char buffer_time[64];
     	struct tm *local_time = localtime(&server_in);
     	strftime(buffer_time, sizeof(buffer_time), "%Y-%m-%d %H:%M:%S", local_time);
 		
-		printf("\nPackage received:"); 
-    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)server_in, buffer_time, "PST8PDT");	
+		printf("\nPackage received. Current time: %s (TZ=%s)\n", buffer_time, "PST8PDT"); 
 
 		// Simulated time traffic
 		int n_ =0;	
 		while(n_ < 10000 * 10){
 			n_++;
-			printf( "%d\r",n_);
+			printf( "Simulated time traffic %d\r",n_);
 		}
 
 		time_t server_out = time(NULL);
@@ -84,8 +83,7 @@ int main() {
 		
 		strcat(message_json, "} "); 
 		
-		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);  
-		// printf("message_json_send: %s\n", message_json);
+		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);
 	}
 
 	return 0;

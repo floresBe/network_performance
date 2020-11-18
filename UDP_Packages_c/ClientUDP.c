@@ -16,7 +16,7 @@
 #define MAXLINE 1024
 
 void * listen_server();
-double get_average();
+float get_average();
 
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
@@ -105,7 +105,6 @@ int main(int argc, char *argv[]) {
 		strcat(message_json, time_); 
 
 		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &servaddr, sizeof(servaddr)); 
-		// printf("message_json_send: %s\n", message_json);
 	}
 
 	clock_t start_time;
@@ -124,11 +123,11 @@ int main(int argc, char *argv[]) {
 
 	pthread_mutex_lock(&mutex_packages_received);
 
-	double jitter = get_average();
+	float jitter = get_average();
 
 	printf("\n\nPackages sent: %d\n", number_packages);
 	printf("Packages received: %d\n", count_packages_received);
-	printf("Rate of packets received: %d \n", (count_packages_received/number_packages)*100);
+	printf("Rate of packets received: %.0f \n",  ((float) count_packages_received/(float)number_packages)* 100);
 	printf("Jitter: %.2f\n", jitter);
 
 	pthread_mutex_unlock(&mutex_packages_received);
@@ -165,44 +164,31 @@ void * listen_server(){
     	struct tm *lt = localtime(&client_in);
     	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 
-		printf("\nPackage received:\n"); 
-		printf("Current time: %ld = %s (TZ=%s)\n", (long)client_in, current_time, "PST8PDT");	
-		// printf("\nmessage: %s\n", message_json);
+		printf("\nPackage received. Current time: %s (TZ=%s)\n", current_time, "PST8PDT");	
 
 		struct json_object *parsed_json;
 		parsed_json = json_tokener_parse(message_json);
-		json_object_object_get_ex(parsed_json, "data", &data);
-		// printf("data: %s\n", json_object_get_string(data));
+		json_object_object_get_ex(parsed_json, "data", &data); 
 
 		json_object_object_get_ex(parsed_json, "client_out", &client_out);
-		// printf("client_out: %d\n", json_object_get_int(client_out));
 		
 		json_object_object_get_ex(parsed_json, "server_in", &server_in);
-		// printf("server_in: %d\n", json_object_get_int(server_in));
 		
 		json_object_object_get_ex(parsed_json, "server_out", &server_out);
-		// printf("client_out: %d\n", json_object_get_int(server_out));
-
-		// printf("client_in: %ld\n\n", client_in);
 
 		int client_out_int, server_in_int, server_out_int, client_in_int;
 		
 		server_in_int = json_object_get_int(server_in);
-		// printf("server_in: %d\n", server_in_int);
 
 		client_out_int = json_object_get_int(client_out);
-		// printf("client_out: %d\n", client_out_int);
 
 		client_in_int = (long int) client_in;
-		// printf("client_in: %d\n", client_in);
 
 		server_out_int = json_object_get_int(server_out);
-		// printf("server_out: %d\n", server_out_int);
 
 		int time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
 		
 		(times)[i_package] = time_travel; 
-		// printf("\ntime_travel[%d]: %d\n", i_package, (times)[i_package]);
 
 		i_package++;
 
@@ -215,18 +201,18 @@ void * listen_server(){
 	}
 }
 
-double get_average(){
-	int avrg = 0;
+float get_average(){
+	float avrg = 0;
 
 	for (int i = 0; i < count_packages_received - 1; i++)
-	{
+	{  
 		// printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
-		int difference = (int) (times)[i + 1] - (int) (times)[i];
+		int difference = (int) (times)[i + 1] - (int) (times)[i]; 
 		// printf("difference: %d\n", difference);
-		avrg += difference;
+		avrg += (float) difference;
 	}
-	avrg = avrg/count_packages_received;
-	// printf("avrg: %d\n", avrg);
+	// printf("sum: %f\n", avrg);
+	avrg = avrg/(float)count_packages_received; 
 	return avrg;
 }
 
