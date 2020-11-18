@@ -92,7 +92,8 @@ int main(int argc, char *argv[]) {
 	
 	char message_json[MAXLINE];
 	char time_[MAXLINE];
-
+	memset(&message_json, 0, sizeof(message_json)); 
+	
 	// Sending messages number_packages times
 	for (int i = 0; i < number_packages; i++)
 	{
@@ -160,11 +161,13 @@ void * listen_server(){
 		recvfrom(sockfd, (char *)message_json, MAXLINE ,MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
 		time_t client_in = time(NULL);
 		
-		char current_time[64];
+		i_package++;
+
+		char current_time[MAXLINE];
     	struct tm *lt = localtime(&client_in);
     	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 
-		printf("\nPackage received. Current time: %s (TZ=%s)\n", current_time, "PST8PDT");	
+		printf("\nPackage %d received. Current time: %s (TZ=%s)\n", i_package, current_time, "PST8PDT");	
 
 		struct json_object *parsed_json;
 		parsed_json = json_tokener_parse(message_json);
@@ -189,8 +192,6 @@ void * listen_server(){
 		int time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
 		
 		(times)[i_package] = time_travel; 
-
-		i_package++;
 
 		pthread_mutex_lock(&mutex_packages_received);
 		

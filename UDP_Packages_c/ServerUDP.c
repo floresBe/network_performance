@@ -45,8 +45,8 @@ int main() {
     int len, n;
 
     len = sizeof(cliaddr);  //len is value/resuslt 
-	setenv("TZ", "PST8PDT", 1); // set time zone
-	printf("Set time zone\n");
+	// setenv("TZ", "PST8PDT", 1); // set time zone
+	// printf("Set time zone\n");
   	printf("Listening...\n");
 	
 	while (1)
@@ -57,11 +57,11 @@ int main() {
 		time_t server_in = time(NULL);
 		message_json[n] = '\0';  
 
-		char buffer_time[64];
-    	struct tm *local_time = localtime(&server_in);
-    	strftime(buffer_time, sizeof(buffer_time), "%Y-%m-%d %H:%M:%S", local_time);
-		
-		printf("\nPackage received. Current time: %s (TZ=%s)\n", buffer_time, "PST8PDT"); 
+		char current_time[MAXLINE];
+    	struct tm *lt = localtime(&server_in);
+    	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
+
+		printf("\nPackage received. Current time: %s (TZ=%s)\n", current_time, "PST8PDT");	
 
 		// Simulated time traffic
 		int n_ =0;	
