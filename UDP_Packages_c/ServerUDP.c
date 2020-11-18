@@ -13,17 +13,10 @@
 #define PORT     6050 
 #define MAXLINE 1024 
 
-typedef struct message_struct { char data[128]; time_t client_out; time_t client_in; time_t server_out; time_t server_in; time_t time_travel;} message_struct; 
-
-static void time_convert(time_t t0, char const *tz_value);
-
 // Driver code 
-int main() { 
+int main() {
+
     int sockfd; 
-    char buffer[MAXLINE]; 
-    char *hello = "Hello World from server";
-	struct message_struct *buffer_strct = (struct message_struct*) malloc(sizeof(struct message_struct));
-	struct message_struct *message_send = (struct message_struct*) malloc(sizeof(struct message_struct));
     struct sockaddr_in servaddr, cliaddr;
       
     // Creating socket file descriptor 
@@ -52,7 +45,7 @@ int main() {
     int len, n;
 
     len = sizeof(cliaddr);  //len is value/resuslt 
-	setenv("TZ", "PST8PDT", 1); // set TZ
+	setenv("TZ", "PST8PDT", 1); // set time zone
   	printf("Listening...\n");
 	
 	while (1)
@@ -62,14 +55,14 @@ int main() {
 		n = recvfrom(sockfd, (char *)message_json, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 		time_t server_in = time(NULL);
 		message_json[n] = '\0'; 
-		printf("\nmessage_json_received : %s\n", message_json); 
+		// printf("\nmessage_json_received : %s\n", message_json); 
 
-		char buffer[64];
-    	struct tm *lt = localtime(&server_in);
-    	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", lt);
+		char buffer_time[64];
+    	struct tm *local_time = localtime(&server_in);
+    	strftime(buffer_time, sizeof(buffer_time), "%Y-%m-%d %H:%M:%S", local_time);
 		
 		printf("\nPackage received:"); 
-    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)server_in, buffer, "PST8PDT");	
+    	printf("\nCurrent time: %ld = %s (TZ=%s)\n", (long)server_in, buffer_time, "PST8PDT");	
 
 		// Simulated time traffic
 		int n_ =0;	
@@ -92,7 +85,7 @@ int main() {
 		strcat(message_json, "} "); 
 		
 		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);  
-		printf("message_json_send: %s\n", message_json);
+		// printf("message_json_send: %s\n", message_json);
 	}
 
 	return 0;
