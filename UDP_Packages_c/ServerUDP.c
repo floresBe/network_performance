@@ -16,59 +16,58 @@
 // Driver code 
 int main() {
 
-    int sockfd; 
-    struct sockaddr_in servaddr, cliaddr;
-      
-    // Creating socket file descriptor 
-    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-        perror("Socket creation failed"); 
-        exit(EXIT_FAILURE); 
-    } 
+	int sockfd; 
+	struct sockaddr_in servaddr, cliaddr;
+	
+	// Creating socket file descriptor 
+	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+	    perror("Socket creation failed"); 
+	    exit(EXIT_FAILURE); 
+	} 
 	printf("Socket created.\n");
 	
-    memset(&servaddr, 0, sizeof(servaddr)); 
-    memset(&cliaddr, 0, sizeof(cliaddr)); 
-      
-    // Filling server information 
-    servaddr.sin_family    = AF_INET; // IPv4 
-    servaddr.sin_addr.s_addr = INADDR_ANY; 
-    servaddr.sin_port = htons(PORT); 
-      
-    // Bind the socket with the server address 
-    if ( bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0 ) 
-    { 
-        perror("Bind failed"); 
-        exit(EXIT_FAILURE); 
-    }
-    printf("Binded\n");
+	memset(&servaddr, 0, sizeof(servaddr)); 
+	memset(&cliaddr, 0, sizeof(cliaddr)); 
+	
+	// Filling server information 
+	servaddr.sin_family    = AF_INET; // IPv4 
+	servaddr.sin_addr.s_addr = INADDR_ANY; 
+	servaddr.sin_port = htons(PORT); 
+	
+	// Bind the socket with the server address 
+	if ( bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0 ) 
+	{
+		perror("Bind failed"); 
+		exit(EXIT_FAILURE); 
+	}
+	printf("Binded\n");
 
-    int len, n;
-
-    len = sizeof(cliaddr);  //len is value/resuslt 
-	// setenv("TZ", "PST8PDT", 1); // set time zone
-	// printf("Set time zone\n");
-  	printf("Listening...\n");
+	int len, n;
+	len = sizeof(cliaddr);  //len is value/resuslt 
+	
+	setenv("TZ", "PST8PDT", 1); // set time zone
+	printf("Set time zone\n");
+	printf("Listening...\n");
 	
 	while (1)
 	{
 		char message_json[MAXLINE];
-		
+		memset(&message_json, 0, sizeof(message_json));   
 		n = recvfrom(sockfd, (char *)message_json, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 		time_t server_in = time(NULL);
-		message_json[n] = '\0';  
 
 		char current_time[MAXLINE];
-    	struct tm *lt = localtime(&server_in);
-    	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
+		struct tm *lt = localtime(&server_in);
+		strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 
 		printf("\nPackage received. Current time: %s (TZ=%s)\n", current_time, "PST8PDT");	
 
 		// Simulated time traffic
-		int n_ =0;	
-		while(n_ < 10000 * 10){
-			n_++;
-			printf( "Simulated time traffic %d\r",n_);
-		}
+		// int n_ =0;	
+		// while(n_ < 10000 * 10){
+		// 	n_++;
+		// 	printf( "Simulated time traffic %d\r",n_);
+		// }
 
 		time_t server_out = time(NULL);
 
@@ -82,6 +81,8 @@ int main() {
 		strcat(message_json, time_); 
 		
 		strcat(message_json, "} "); 
+
+		// printf("%s", message_json);
 		
 		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);
 	}
