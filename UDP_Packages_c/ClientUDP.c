@@ -135,14 +135,14 @@ int main(int argc, char *argv[]) {
 	memset(&rate, 0, sizeof(rate)); 
 	
 	jitter = get_average();
-	rate = ((float) count_packages_received/(float)number_packages)* 100;
+	rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
 
 	printf("\n\nPackages sent: %d\n", number_packages);
 	printf("Packages received: %d\n", count_packages_received);
-	printf("Rate of packets received: %.0f \n", rate );
+	printf("Rate of lost packets: %.0f \n", rate );
 	printf("Jitter: %.2f\n", jitter);
 
-	// file_name: server_hostname + size_message + jitter.txt
+	// file_name: server_hostname + number_packages + jitter.txt
 
 	char s_message[MAXLINE];
 	char * file_data_jitter_name[MAXLINE];
@@ -151,14 +151,14 @@ int main(int argc, char *argv[]) {
 	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
 	
 	strcat(file_data_jitter_name, argv[1]);
-	sprintf(s_message, "_%d", size_message);
+	sprintf(s_message, "_%d", number_packages);
 	strcat(file_data_jitter_name, s_message);
 	strcat(file_data_jitter_name, "_jitter");
 	strcat(file_data_jitter_name, ".txt");
 
-	print_to_file(file_data_jitter_name, number_packages, jitter);
+	print_to_file(file_data_jitter_name, size_message, jitter);
 
-	// file_name: server_hostname + size_message + jitter + gnu.txt
+	// file_name: server_hostname + number_packages + jitter + gnu.txt
 	char * file_data_jitter_gnu_name[MAXLINE];
 
 	memset(&file_data_jitter_gnu_name, 0, sizeof(file_data_jitter_gnu_name)); 
@@ -171,24 +171,24 @@ int main(int argc, char *argv[]) {
 	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
 	
 	strcat(file_data_jitter_name, argv[1]);
-	sprintf(s_message, "_%d", size_message);
+	sprintf(s_message, "_%d", number_packages);
 	strcat(file_data_jitter_name, s_message);
 	strcat(file_data_jitter_name, "_jitter");
 
 	create_gnu_file(file_data_jitter_gnu_name, file_data_jitter_name);
 
-	// file_name: server_hostname + size_message + rate.txt
+	// file_name: server_hostname + number_packages + rate.txt
  	
 	char * file_data_rate_name[MAXLINE];
 	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
 
 	strcat(file_data_rate_name, argv[1]);
-	sprintf(s_message, "_%d", size_message);
+	sprintf(s_message, "_%d", number_packages);
 	strcat(file_data_rate_name, s_message);
 	strcat(file_data_rate_name, "_rate");  
 	strcat(file_data_rate_name, ".txt"); 
 
-	print_to_file(file_data_rate_name, number_packages, rate);
+	print_to_file(file_data_rate_name, size_message, rate);
 
 	char * file_data_rate_gnu_name[MAXLINE];
 
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
 	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
 	
 	strcat(file_data_rate_name, argv[1]);
-	sprintf(s_message, "_%d", size_message);
+	sprintf(s_message, "_%d", number_packages);
 	strcat(file_data_rate_name, s_message);
 	strcat(file_data_rate_name, "_rate");
 
@@ -273,12 +273,12 @@ void * listen_server(){
 
 		time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
 
-		// printf("server_in_int %d\n", server_in_int);
-		// printf("client_out_int %d\n", client_out_int);
-		// printf("client_in_int %d\n", client_in_int);
-		// printf("server_out_int %d\n", server_out_int);
+		printf("server_in_int %d\n", server_in_int);
+		printf("client_out_int %d\n", client_out_int);
+		printf("client_in_int %d\n", client_in_int);
+		printf("server_out_int %d\n", server_out_int);
 
-		// printf("time_travel %d\n", time_travel);
+		printf("time_travel %d\n", time_travel);
 		
 		(times)[i_package] = time_travel;
 		// printf("(times)[%d] = %d\n", i_package, (times)[i_package]);
@@ -342,8 +342,8 @@ int create_gnu_file(char * filename, char * file_data_name)
    }
 	
 	fprintf(ou_file,"#!/usr/local/bin/gnuplot -persist\n");
-	fprintf(ou_file,"set terminal postscript landscape noenhanced color  \\ \n");
-	fprintf(ou_file, "dashed defaultplex \" Helvetica \" 14\n");
+	fprintf(ou_file,"set terminal postscript landscape noenhanced color \\\n");
+	fprintf(ou_file,"dashed defaultplex \"Helvetica\" 14\n");
 	fprintf(ou_file,"set output '%s_grafica.ps'\n", file_data_name);
 	fprintf(ou_file,"set xlabel \"Tamano del paquete UDP\" \n");
 	fprintf(ou_file,"set ylabel \"Tasa de paquetes perdidos (%c) \" \n", '%');
@@ -355,7 +355,7 @@ int create_gnu_file(char * filename, char * file_data_name)
 	fprintf(ou_file,"#set mytics 1.000000\n");
 	fprintf(ou_file,"#set xtics border mirror norotate 1\n");
 	fprintf(ou_file,"#set ytics border mirror norotate 0.5\n");
-	fprintf(ou_file,"plot \"%s.txt\" using 1:2 title \"Tasa de paquetes perdidos\" w lp pt 5 pi -4 lt rgb \"violet\", \\ \n", file_data_name);
+	fprintf(ou_file,"plot \"%s.txt\" using 1:2 title \"Tasa de paquetes perdidos\" w lp pt 5 pi -4 lt rgb \"violet\", \\\n", file_data_name);
 	fprintf(ou_file,"#w linespoint\n");
 	fprintf(ou_file,"#    EOF\n");
 

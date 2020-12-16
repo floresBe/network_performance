@@ -1,7 +1,7 @@
 #!/usr/local/bin/gnuplot -persist
-set terminal postscript landscape noenhanced color  \ 
-dashed defaultplex " Helvetica " 14
-set output '201.174.73.227_8_rate_grafica.ps'
+set terminal postscript landscape noenhanced color \
+dashed defaultplex "Helvetica" 14
+set output 'cachanilla.itmexicali.edu.mx_100_rate_grafica.ps'
 set xlabel "Tamano del paquete UDP" 
 set ylabel "Tasa de paquetes perdidos (%) " 
 set key left top
@@ -12,6 +12,6 @@ set title "Tasa de paquetes perdidos en funcion del tamano del buffer UDP"
 #set mytics 1.000000
 #set xtics border mirror norotate 1
 #set ytics border mirror norotate 0.5
-plot "201.174.73.227_8_rate.txt" using 1:2 title "Tasa de paquetes perdidos" w lp pt 5 pi -4 lt rgb "violet", \ 
+plot "cachanilla.itmexicali.edu.mx_100_rate.txt" using 1:2 title "Tasa de paquetes perdidos" w lp pt 5 pi -4 lt rgb "violet", \
 #w linespoint
 #    EOF
