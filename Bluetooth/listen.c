@@ -8,7 +8,7 @@
 #include <netinet/in.h> 
 #include <time.h>
 #include<json-c/json.h>
-#include<bluetooth.h>
+#include<bluetooth/bluetooth.h>
 
 #define PORT     6050 
 #define MAXLINE 1024 
