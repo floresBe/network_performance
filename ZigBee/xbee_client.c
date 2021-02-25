@@ -80,9 +80,9 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	address.addr64[2] = 0xA2;
 	address.addr64[3] = 0x00;
 	address.addr64[4] = 0x41;
-	address.addr64[5] = 0x80;
-	address.addr64[6] = 0xA7;
-	address.addr64[7] = 0xC7;
+	address.addr64[5] = 0x84;
+	address.addr64[6] = 0xE6;
+	address.addr64[7] = 0x23;
 
 	// Create a new AT connection to the remote xbee
 	if((ret = xbee_conNew(xbee, &con, "Data", &address))== XBEE_ENONE)
@@ -100,7 +100,17 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) != XBEE_ENONE)
 		printf("Associating data: OK\n");
 
-  xbee_conTx(con, NULL, "Hola");
+  	// xbee_conTx(con, NULL, "Hola");
+	unsigned char retVal;
+
+	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d!", 2021)) != XBEE_ENONE) {
+         if (ret == XBEE_ETX) {
+                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
+        } else {
+                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
+        }
+	}
+
 	// Configure a callback for the connection, this function
 	// is called every time a packet for this connection is received
 	if ((ret = xbee_conCallbackSet(con, callback_function, NULL))!= XBEE_ENONE)

@@ -60,7 +60,7 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
 {
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
-	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB0", 9600))== XBEE_ENONE)
+	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB1", 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
 	else
 		printf("Configuring xbee: %s(Code: %d)\n", xbee_errorToStr(ret), ret);
@@ -81,9 +81,9 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	address.addr64[2] = 0xA2;
 	address.addr64[3] = 0x00;
 	address.addr64[4] = 0x41;
-	address.addr64[5] = 0x80;
-	address.addr64[6] = 0xAD;
-	address.addr64[7] = 0xDE;
+	address.addr64[5] = 0x84;
+	address.addr64[6] = 0xAA;
+	address.addr64[7] = 0xB4;
 
 	// Create a new AT connection to the remote xbee
 	if((ret = xbee_conNew(xbee, &con, "Data", &address))== XBEE_ENONE)
