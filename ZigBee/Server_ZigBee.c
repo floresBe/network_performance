@@ -1,19 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <termios.h>
+// Server side implementation of ZigBee client-server model 
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <unistd.h> 
+#include <string.h> 
+#include <sys/types.h> 
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <netinet/in.h> 
 #include <time.h>
-#include <json-c/json.h>
+#include<json-c/json.h>
 #include <xbee.h>
-
-// Buffer size
+ 
 #define BUFFER_SIZE 256
-// Send time in sec
 #define SEND_TIME 10
-
+#define MAXLINE 1024 
 
 // Declare functions
 struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret);
@@ -24,39 +24,38 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 // Buffer to store the data received
 char read_buffer[BUFFER_SIZE];
 
-void main()
-{
-	// Xbee errors variable
+// Driver code 
+int main() {
+
+    // Xbee errors variable
 	xbee_err ret;
 
 	// Configure xbee
 	struct xbee *xbee = configure_xbee(xbee, ret);
-
+    unsigned char retVal; 
+	
 	// Create a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
 
+	setenv("TZ", "PST8PDT", 1); // set time zone
+	printf("Set time zone\n");
+	printf("Listening...\n");
+	
 	// Receive data from the remote xbee
 	// and send a message back
-	while(1) {
-    unsigned char retVal; 
+	while (1)
+	{ 
+		receive_data(xbee, con, ret);
+		sleep(SEND_TIME);
 
-	receive_data(xbee, con, ret);
-	
-	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d in the SERVER!", 2021)) != XBEE_ENONE) {
-         if (ret == XBEE_ETX) {
-                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
-        } else {
-                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
-        }
-	}
-	sleep(SEND_TIME);
-	
 	}
 
 	// Shutdown connection
 	xbee_conEnd(con);
 	// Shutdown libxbee
 	xbee_shutdown(xbee);
+
+	return 0;
 }
 
 struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
@@ -98,6 +97,7 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	return con;
 }
 
+
 void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 {
 	// Associate data with a connection
@@ -109,6 +109,7 @@ void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 		printf("Configuring callback: %s(Code: %d)\n",
 				xbee_errorToStr(ret), ret);
 }
+
 
 /* Callback function, it will be executed once for each packet
 that is received on an associated connection */

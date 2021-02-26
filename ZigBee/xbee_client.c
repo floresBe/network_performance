@@ -28,13 +28,13 @@ void main()
 {
 	// Xbee errors variable
 	xbee_err ret;
+
 	// Configure xbee
 	struct xbee *xbee = configure_xbee(xbee, ret);
 	// Creating a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
 	
-	// Receive data from the remote xbee
-	// and send it back
+	// Send data to the remote xbee 
 	while(1) {
 		send_data(xbee, con, ret);
 		sleep(SEND_TIME);
@@ -70,9 +70,9 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	address.addr64[2] = 0xA2;
 	address.addr64[3] = 0x00;
 	address.addr64[4] = 0x41;
-	address.addr64[5] = 0x84;
-	address.addr64[6] = 0xE6;
-	address.addr64[7] = 0x23;
+	address.addr64[5] = 0xC1;
+	address.addr64[6] = 0xB9;
+	address.addr64[7] = 0x54;
 
 	// Create a new AT connection to the remote xbee
 	if((ret = xbee_conNew(xbee, &con, "Data", &address))== XBEE_ENONE)
@@ -92,7 +92,7 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
  
 	unsigned char retVal;
 
-	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d!", 2021)) != XBEE_ENONE) {
+	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d in the CLIENT!", 2021)) != XBEE_ENONE) {
          if (ret == XBEE_ETX) {
                  fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
         } else {
