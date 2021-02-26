@@ -46,7 +46,18 @@ void main()
 	// Receive data from the remote xbee
 	// and send it to altairsmartcore
 	while(1) {
-    xbee_conTx(con, NULL, "Hello\r\n");
+    	// xbee_conTx(con, NULL, "Hello\r\n");
+
+	unsigned char retVal;
+
+	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d!", 2021)) != XBEE_ENONE) {
+         if (ret == XBEE_ETX) {
+                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
+        } else {
+                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
+        }
+	}
+
 		receive_data(xbee, con, ret);
 		sleep(SEND_TIME);
 	}
@@ -60,7 +71,7 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
 {
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
-	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB1", 9600))== XBEE_ENONE)
+	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB0", 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
 	else
 		printf("Configuring xbee: %s(Code: %d)\n", xbee_errorToStr(ret), ret);
@@ -111,6 +122,7 @@ void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 that is received on an associated connection */
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data)
 {
+	xbee_err ret;
 	// Store data in buffer
 	memset(read_buffer, '\0', BUFFER_SIZE);
 	strcpy(read_buffer, (*pkt)->data);
@@ -144,5 +156,15 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 
   printf("JSON FORMAT: %s\n", &read_buffer[0]);
 	// Transmit a message
-	xbee_conTx(con, NULL, "Receiving data: OK");
+	// xbee_conTx(con, NULL, "Receiving data: OK");
+
+	unsigned char retVal;
+
+	if ((ret = xbee_conTx(con, &retVal, "Receiving data: OK")) != XBEE_ENONE) {
+         if (ret == XBEE_ETX) {
+                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
+        } else {
+                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
+        }
+	}
 }

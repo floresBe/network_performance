@@ -1,22 +1,12 @@
-/* Standard input/output definitions */
 #include <stdio.h>
-/* Standard General Utilities Library */
 #include <stdlib.h>
-/* File Control Definitions */
 #include <fcntl.h>
-/* UNIX Standard Definitions */
 #include <unistd.h>
-/* ERROR Number Definitions */
 #include <errno.h>
-/* String function definitions */
 #include <string.h>
-/* POSIX Terminal Control Definitions */
 #include <termios.h>
-/* Date and time manipulation */
 #include <time.h>
-/* Parser-JSON */
 #include <json-c/json.h>
-/* Digi's XBee wireless modules definitions */
 #include <xbee.h>
 
 // Buffer size
@@ -25,14 +15,13 @@
 #define SEND_TIME 10
 
 
-// Declare functions
+// Functions
 struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret);
 struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
-
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
 
-// Create buffer to store the data received
+// Buffer to store the data received
 char read_buffer[BUFFER_SIZE];
 
 void main()
@@ -41,10 +30,11 @@ void main()
 	xbee_err ret;
 	// Configure xbee
 	struct xbee *xbee = configure_xbee(xbee, ret);
-	// Create a new connection
+	// Creating a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
+	
 	// Receive data from the remote xbee
-	// and send it to altairsmartcore
+	// and send it back
 	while(1) {
 		send_data(xbee, con, ret);
 		sleep(SEND_TIME);
@@ -99,8 +89,7 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 	// Associate data with a connection
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) != XBEE_ENONE)
 		printf("Associating data: OK\n");
-
-  	// xbee_conTx(con, NULL, "Hola");
+ 
 	unsigned char retVal;
 
 	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d!", 2021)) != XBEE_ENONE) {
@@ -125,22 +114,29 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	// Store data in buffer
 	memset(read_buffer, '\0', BUFFER_SIZE);
 	strcpy(read_buffer, (*pkt)->data);
+	
 	// Get current time and date
 	// Initialize date/time struct
 	time_t curtime;
 	struct tm *timeinfo;
+	
 	// Get system current date/time
 	time (&curtime);
+	
 	// Format date/time variable
 	timeinfo = localtime(&curtime);
+	
 	// Get current date
 	char dateString[20];
 	strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
+	
 	// Get current time
 	char timeString[40];
 	strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
+	
 	// Create json object
 	json_object *jobj = json_object_new_object();
+	
 	// Add date/time objects into main json object
 	json_object *jdate = json_object_new_string(dateString);
 	json_object_object_add(jobj, "Date", jdate);
@@ -149,11 +145,13 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 
 	// Add the converted value to the json object
 	json_object *jmoisture = json_object_new_string(&read_buffer[0]);
-	json_object_object_add(jobj,"Datos", jmoisture);
+	json_object_object_add(jobj,"Data", jmoisture);
+	
 	// Copy the json string to the buffer
 	strcpy(read_buffer, json_object_to_json_string(jobj));
 
-  printf("JSON FORMAT: %s\n", &read_buffer[0]);
+  	printf("JSON FORMAT: %s\n", &read_buffer[0]);
+	
 	// Transmit a message
 	xbee_conTx(con, NULL, "OK");
 }
