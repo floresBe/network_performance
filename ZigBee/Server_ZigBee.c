@@ -26,7 +26,6 @@ char read_buffer[BUFFER_SIZE];
 
 // Driver code 
 int main() {
-
     // Xbee errors variable
 	xbee_err ret;
 
@@ -47,7 +46,6 @@ int main() {
 	{ 
 		receive_data(xbee, con, ret);
 		sleep(SEND_TIME);
-
 	}
 
 	// Shutdown connection
@@ -62,7 +60,7 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
 {
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
-	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB1", 9600))== XBEE_ENONE)
+	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB0", 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
 	else
 		printf("Configuring xbee: %s(Code: %d)\n", xbee_errorToStr(ret), ret);
@@ -97,7 +95,6 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	return con;
 }
 
-
 void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 {
 	// Associate data with a connection
@@ -110,11 +107,9 @@ void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 				xbee_errorToStr(ret), ret);
 }
 
-
-/* Callback function, it will be executed once for each packet
-that is received on an associated connection */
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data)
 {
+	printf("callback_function\n");
 	xbee_err ret;
 	// Store data in buffer
 	memset(read_buffer, '\0', BUFFER_SIZE);
@@ -165,5 +160,5 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
         } else {
                 fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
         }
-	}
+	} 
 }

@@ -21,8 +21,7 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
-
-void * listen_server(struct xbee *xbee, struct xbee_con *con,xbee_err ret);
+void * listen_server(void *arg);
 float get_average();
 int print_to_file(char * filename, int data1, float data2);
 
@@ -35,13 +34,21 @@ char read_buffer[BUFFER_SIZE];
 
 int len;
 int ** times;
-int i_package = 0;
+int i_package = 0; 
+
+//For thread_listen_server args
+struct Server_ZigBee
+{
+	struct xbee *xbee;
+	struct xbee_con *con;
+	xbee_err ret;
+};
 
 // Driver code 
 int main(int argc, char *argv[]) {	
 	
 	// Xbee errors variable
-	xbee_err ret;
+	xbee_err ret; 
 
 	// Verifing args
 	if (argc != 3) {
@@ -51,6 +58,7 @@ int main(int argc, char *argv[]) {
 	
 	//To Do:
 	// address = argv[1];
+	// USBX = argv[x]
 
 	size_message = atoi(argv[1]);
 	number_packages = atoi(argv[2]);
@@ -74,71 +82,65 @@ int main(int argc, char *argv[]) {
 	
 	// Creating a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
-	ret = xbee_validate(xbee);
-	printf("%d\n", ret);
 
 	// Start thread to listen for server
 	if (pthread_mutex_init(&mutex_packages_received, NULL) != 0) {
 		perror("Failed to start mutex initialization");
 		exit(EXIT_FAILURE);
 	}
-	
-	// pthread_create(&thread_listen_server, NULL, listen_server, NULL);
-	
+
+	//Server args for listen_server
+	struct Server_ZigBee server_zigBee;
+	server_zigBee.con = con;
+	server_zigBee.ret = ret;
+	server_zigBee.xbee = xbee;
+
+	pthread_create(&thread_listen_server, NULL, listen_server, (void *)&server_zigBee);
+
 	// Sending messages number_packages times
 	for (int i = 0; i < number_packages; i++)
 	{
+		printf("package: %d - ",1+i);
 		// Send data to the remote xbee 
-		send_data(xbee, con, ret);
-		sleep(SEND_TIME);
+		send_data(xbee, con, ret); 
 	}
-
-	//listen_server(xbee,con,ret);
-
-	// Shutdown connection
-	xbee_conEnd(con);
-	// Shutdown libxbee
-	xbee_shutdown(xbee);
-
+	
 	clock_t start_time;
 	clock_t end_t;
-	double seconds_elapsed = 0;
-	start_time = clock(); 
+	double seconds_elapsed = 0; 
 	double timeout = number_packages * 0.1; //100 millisecond for every send message
+	start_time = clock();  
 
 	// Timeout wating
     while ( seconds_elapsed < timeout * 1000) {
+		// printf("%d\n", start_time);
 		end_t = clock(); 
 		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
+		
 		printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
 		printf( "\r");
 	} 
+
+	printf(" \n");
+	 
+	// Shutdown connection
+	xbee_conEnd(con);
+	// Shutdown libxbee
+	xbee_shutdown(xbee); 
+
+	// float jitter ;
+	// float rate;
+
+	// memset(&jitter, 0, sizeof(jitter)); 
+	// memset(&rate, 0, sizeof(rate)); 
 	
-	// Cancel thread
-    // void *res;
-	// int s = pthread_cancel(thread_listen_server);
-    // if (s != 0)
-    //     perror("pthread_cancel");
+	// jitter = get_average();
+	// rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
 
-    // s = pthread_join(thread_listen_server, &res);
-    // if (s != 0)
-    //     perror("pthread_join");
-	
-	// pthread_mutex_lock(&mutex_packages_received);
-
-	float jitter ;
-	float rate;
-
-	memset(&jitter, 0, sizeof(jitter)); 
-	memset(&rate, 0, sizeof(rate)); 
-	
-	jitter = get_average();
-	rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
-
-	printf("\n\nPackages sent: %d\n", number_packages);
-	printf("Packages received: %d\n", count_packages_received);
-	printf("Rate of lost packets: %.0f \n", rate );
-	printf("Jitter: %.2f\n", jitter);
+	// printf("\n\nPackages sent: %d\n", number_packages);
+	// printf("Packages received: %d\n", count_packages_received);
+	// printf("Rate of lost packets: %.0f \n", rate );
+	// printf("Jitter: %.2f\n", jitter);
 	
 /*
 	// file_name: server_hostname + number_packages + jitter.txt
@@ -208,8 +210,6 @@ int main(int argc, char *argv[]) {
 	create_gnu_file(file_data_rate_gnu_name, file_data_rate_name);
 */
 
-	// pthread_mutex_unlock(&mutex_packages_received);
-
 	return 0; 
 }
 
@@ -217,7 +217,7 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
 {
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
-	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB0", 9600))== XBEE_ENONE)
+	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB1", 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
 	else
 		printf("Configuring xbee: %s(Code: %d)\n", xbee_errorToStr(ret), ret);
@@ -252,30 +252,33 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	return con;
 }
 
-void * listen_server(struct xbee *xbee, struct xbee_con *con,xbee_err ret){
+
+void * listen_server(void *arg){
 	
-	//No more packages should be received than sent
-	while (1){
-		// count_packages_received < number_packages
-		char *message_json[MAXLINE];
-		struct json_object *server_in;
-		struct json_object *client_out;
-		struct json_object *server_out;
-		struct json_object *data;
-		
-		memset(&message_json, 0, sizeof(message_json)); 
-		receive_data(xbee, con, ret);
-		sleep(SEND_TIME);
-		time_t client_in = time(NULL);
-		
-		i_package++;
+	struct Server_ZigBee *server_zigBee;
+	server_zigBee = (struct  Server_ZigBee  *) arg;
 
-		char current_time[MAXLINE];
+	//No more packages should be received than sent 
+	while (count_packages_received < number_packages){ 
+		receive_data(server_zigBee->xbee, server_zigBee->con, server_zigBee->ret);
+		// char *message_json[MAXLINE];
+		// memset(&message_json, 0, sizeof(message_json)); 
+
+		// struct json_object *server_in;
+		// struct json_object *client_out;
+		// struct json_object *server_out;
+		// struct json_object *data;
+
+		// char current_time[MAXLINE]; 
+
+		
+		
+		/*time_t client_in = time(NULL);
     	struct tm *lt = localtime(&client_in);
-    	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
-
-		printf("\n\nPackage %d received. Current time: %s (TZ=%s)\n", i_package, current_time, "PST8PDT");	
-
+   		strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
+		
+		printf("\n\nPackage %d received. Current time: %s (TZ=%s)\n\n", i_package+1, current_time, "PST8PDT");	 
+		
 		struct json_object *parsed_json;
 		parsed_json = json_tokener_parse(message_json);
 		json_object_object_get_ex(parsed_json, "data", &data); 
@@ -300,24 +303,23 @@ void * listen_server(struct xbee *xbee, struct xbee_con *con,xbee_err ret){
 		memset(&time_travel, 0, sizeof(time_travel)); 
 
 		time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
-
+		
 		// (times)[i_package] = time_travel;
-
-		pthread_mutex_lock(&mutex_packages_received);
-		
-		//count every received package 
-		count_packages_received ++;
-		
-		pthread_mutex_unlock(&mutex_packages_received);
+		i_package++;*/
+	
 	}
+	// printf("listen_server. \n");
 }
 
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data)
 {
+	printf("callback_function\n");
+	if(count_packages_received < number_packages){
+	
 	// Store data in buffer
 	memset(read_buffer, '\0', BUFFER_SIZE);
 	strcpy(read_buffer, (*pkt)->data);
-	printf(read_buffer);
+	printf("read_buffer: %s\n",read_buffer);
 
 	// Get current time and date
 	// Initialize date/time struct
@@ -353,23 +355,25 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	
 	// Copy the json string to the buffer
 	strcpy(read_buffer, json_object_to_json_string(jobj));
-
-  	printf("JSON FORMAT: %s\n", &read_buffer[0]);
+	 
+  	printf("JSON FORMAT: %s\n\n", &read_buffer[0]);
+	count_packages_received++;
 	
-	// Transmit a message
-	xbee_conTx(con, NULL, "OK");
+	}
 }
 
 void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 {
-	printf("receive_data\n");
+	// printf("package: %d -",count_packages_received);
+	// printf("receive_data\n");
+	
 	// Associate data with a connection
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) != XBEE_ENONE)
-		printf("Associating data: OK\n");
+		printf("Associating data error: %d\n\n", ret);
 	// Configure a callback for the connection, this function
 	// is called every time a packet for this connection is received
 	if ((ret = xbee_conCallbackSet(con, callback_function, NULL))!= XBEE_ENONE)
-		printf("Configuring callback: %s(Code: %d)\n",
+		printf("Configuring callback: %s(Code: %d)\n\n",
 				xbee_errorToStr(ret), ret);
 }
 
@@ -381,9 +385,9 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 
 	// Associate data with a connection
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) == XBEE_ENONE)
-		printf("Associating data: OK\n");
+		printf("Associating data: OK\n\n");
  
- 	// Creating message
+ 	/*// Creating message
 	// memset(&message_, 0, sizeof(message_));
 	// for (int i = 0; i < size_message - 8; i++)
 	// { 
@@ -398,20 +402,11 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 	// sprintf(time_, "%ld", client_out);
 	// strcat(message_json, time_); 
 		  
-	// printf("message_json: %s \n", message_json);
+	// printf("message_json: %s \n", message_json);*/
 
 	unsigned char retVal; 
 
-	// if ((ret = xbee_conTx(con, &retVal, "ss")) != XBEE_ENONE) {
-    //     printf("%d\n",retVal);
-	// 	if (ret == XBEE_ETX) {
-    //              fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
-    //     } else {
-    //             fprintf(stderr, "an error occured... %s, %d\n", xbee_errorToStr(ret), ret);
-    //     }
-	// }
-
-	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d!", 2012)) != XBEE_ENONE) {
+	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d in the CLIENT", 2021)) != XBEE_ENONE) {
         if (ret == XBEE_ETX) {
                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
         } else {
@@ -458,8 +453,6 @@ int print_to_file(char * filename, int data1, float data2)
 
    return 1;
 }
-
-
 
 int create_gnu_file(char * filename, char * file_data_name)
 {
