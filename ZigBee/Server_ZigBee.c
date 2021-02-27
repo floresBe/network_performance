@@ -22,7 +22,7 @@ void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
 
 // Buffer to store the data received
-char read_buffer[BUFFER_SIZE];
+char read_buffer[MAXLINE];
 
 // Driver code 
 int main() {
@@ -127,38 +127,61 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	timeinfo = localtime(&curtime);
 	
 	// Get current date
-	char dateString[20];
-	strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
+	// char dateString[20];
+	// strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
 	
-	// Get current time
-	char timeString[40];
-	strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
+	// // Get current time
+	// char timeString[40];
+	// strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
 	
-	// Create json object
-	json_object *jobj = json_object_new_object();
+	// // Create json object
+	// json_object *jobj = json_object_new_object();
 	
-	// Add date/time objects into main json object
-	json_object *jdate = json_object_new_string(dateString);
-	json_object_object_add(jobj, "Date", jdate);
-	json_object *jtime = json_object_new_string(timeString);
-	json_object_object_add(jobj, "Time", jtime);
+	// // Add date/time objects into main json object
+	// json_object *jdate = json_object_new_string(dateString);
+	// json_object_object_add(jobj, "Date", jdate);
+	// json_object *jtime = json_object_new_string(timeString);
+	// json_object_object_add(jobj, "Time", jtime);
 
-	// Add the converted value to the json object
-	json_object *jmoisture = json_object_new_string(&read_buffer[0]);
-	json_object_object_add(jobj,"Datos", jmoisture);
+	// // Add the converted value to the json object
+	// json_object *jmoisture = json_object_new_string(&read_buffer[0]);
+	// json_object_object_add(jobj,"Datos", jmoisture);
 	
 	// Copy the json string to the buffer
-	strcpy(read_buffer, json_object_to_json_string(jobj));
+	// strcpy(read_buffer, json_object_to_json_string(jobj));
 
-  printf("JSON FORMAT: %s\n", &read_buffer[0]);
+  	// printf("JSON FORMAT: %s\n", &read_buffer[0]);
+	printf("%s\n", &read_buffer[0]);
 	// Transmit a message
-	unsigned char retVal;
 
-	if ((ret = xbee_conTx(con, &retVal, "Receiving data: OK")) != XBEE_ENONE) {
+		time_t server_in = time(NULL);
+		char current_time[MAXLINE];
+		struct tm *lt = localtime(&server_in);
+		time_t server_out = time(NULL);
+
+		char time_[128];
+		strcat(read_buffer, ",\"si\":"); 
+		sprintf(time_, "%ld", server_in);
+		strcat(read_buffer, time_); 
+		
+		strcat(read_buffer, ",\"so\":"); 
+		sprintf(time_, "%ld", server_out);
+		strcat(read_buffer, time_); 
+		
+		strcat(read_buffer, "} "); 
+
+		printf("%s\n", read_buffer);
+		printf("%s\n", &read_buffer[0]);
+
+	unsigned char retVal; 
+	int len = (int) strlen(read_buffer);
+	printf("len %d\n",len);
+
+	if ((ret = xbee_connTx(con, &retVal, &read_buffer[0], 72) ) != XBEE_ENONE) {
          if (ret == XBEE_ETX) {
-                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
+                 fprintf(stderr, "A transmission error occured... (0x%02X)\n", retVal);
         } else {
-                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
+                fprintf(stderr, "An error occured... %s\n", xbee_errorToStr(ret));
         }
 	} 
 }

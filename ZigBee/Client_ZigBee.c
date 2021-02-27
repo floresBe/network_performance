@@ -28,7 +28,7 @@ int print_to_file(char * filename, int data1, float data2);
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
 
-char message_[128];
+
 int size_message, number_packages, count_packages_received = 0;
 char read_buffer[BUFFER_SIZE];
 
@@ -253,62 +253,16 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 }
 
 
-void * listen_server(void *arg){
-	
+void * listen_server(void *arg)
+{	
 	struct Server_ZigBee *server_zigBee;
 	server_zigBee = (struct  Server_ZigBee  *) arg;
 
 	//No more packages should be received than sent 
 	while (count_packages_received < number_packages){ 
-		receive_data(server_zigBee->xbee, server_zigBee->con, server_zigBee->ret);
-		// char *message_json[MAXLINE];
-		// memset(&message_json, 0, sizeof(message_json)); 
-
-		// struct json_object *server_in;
-		// struct json_object *client_out;
-		// struct json_object *server_out;
-		// struct json_object *data;
-
-		// char current_time[MAXLINE]; 
-
-		
-		
-		/*time_t client_in = time(NULL);
-    	struct tm *lt = localtime(&client_in);
-   		strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
-		
-		printf("\n\nPackage %d received. Current time: %s (TZ=%s)\n\n", i_package+1, current_time, "PST8PDT");	 
-		
-		struct json_object *parsed_json;
-		parsed_json = json_tokener_parse(message_json);
-		json_object_object_get_ex(parsed_json, "data", &data); 
-
-		json_object_object_get_ex(parsed_json, "client_out", &client_out);
-		
-		json_object_object_get_ex(parsed_json, "server_in", &server_in);
-		
-		json_object_object_get_ex(parsed_json, "server_out", &server_out);
-
-		int client_out_int, server_in_int, server_out_int, client_in_int;
-		
-		server_in_int = json_object_get_int(server_in);
-
-		client_out_int = json_object_get_int(client_out);
-
-		client_in_int = (long int) client_in;
-
-		server_out_int = json_object_get_int(server_out);
-
-		int time_travel;
-		memset(&time_travel, 0, sizeof(time_travel)); 
-
-		time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
-		
-		// (times)[i_package] = time_travel;
-		i_package++;*/
-	
+		receive_data(server_zigBee->xbee, server_zigBee->con, server_zigBee->ret);	
 	}
-	// printf("listen_server. \n");
+	// printf("listen_server stoped. \n");
 }
 
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data)
@@ -316,48 +270,91 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	printf("callback_function\n");
 	if(count_packages_received < number_packages){
 	
-	// Store data in buffer
-	memset(read_buffer, '\0', BUFFER_SIZE);
-	strcpy(read_buffer, (*pkt)->data);
-	printf("read_buffer: %s\n",read_buffer);
+		// Store data in buffer
+		memset(read_buffer, '\0', BUFFER_SIZE);
+		strcpy(read_buffer, (*pkt)->data);
+		printf("read_buffer: %s\n",read_buffer);
 
-	// Get current time and date
-	// Initialize date/time struct
-	time_t curtime;
-	struct tm *timeinfo;
-	
-	// Get system current date/time
-	time (&curtime);
-	
-	// Format date/time variable
-	timeinfo = localtime(&curtime);
-	
-	// Get current date
-	char dateString[20];
-	strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
-	
-	// Get current time
-	char timeString[40];
-	strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
-	
-	// Create json object
-	json_object *jobj = json_object_new_object();
-	
-	// Add date/time objects into main json object
-	json_object *jdate = json_object_new_string(dateString);
-	json_object_object_add(jobj, "Date", jdate);
-	json_object *jtime = json_object_new_string(timeString);
-	json_object_object_add(jobj, "Time", jtime);
+		// Get current time and date
+		// Initialize date/time struct
+		time_t curtime;
+		struct tm *timeinfo;
+		
+		// Get system current date/time
+		time (&curtime);
+		
+		// Format date/time variable
+		timeinfo = localtime(&curtime);
+		
+		// Get current date
+		char dateString[20];
+		strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
+		
+		// Get current time
+		char timeString[40];
+		strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
+		
+		// Create json object
+		json_object *jobj = json_object_new_object();
+		
+		// Add date/time objects into main json object
+		json_object *jdate = json_object_new_string(dateString);
+		json_object_object_add(jobj, "Date", jdate);
+		json_object *jtime = json_object_new_string(timeString);
+		json_object_object_add(jobj, "Time", jtime);
 
-	// Add the converted value to the json object
-	json_object *jmoisture = json_object_new_string(&read_buffer[0]);
-	json_object_object_add(jobj,"Data", jmoisture);
-	
-	// Copy the json string to the buffer
-	strcpy(read_buffer, json_object_to_json_string(jobj));
-	 
-  	printf("JSON FORMAT: %s\n\n", &read_buffer[0]);
-	count_packages_received++;
+		// Add the converted value to the json object
+		json_object *jmoisture = json_object_new_string(&read_buffer[0]);
+		json_object_object_add(jobj,"Data", jmoisture);
+		
+		// Copy the json string to the buffer
+		//strcpy(read_buffer, json_object_to_json_string(jobj));
+		
+		printf("JSON FORMAT: %s\n\n", &read_buffer[0]);
+
+		char *message_json[MAXLINE];
+		struct json_object *server_in;
+		struct json_object *client_out;
+		struct json_object *server_out;
+		struct json_object *data;
+		 
+
+		memset(&message_json, 0, sizeof(message_json)); 
+
+		struct json_object *parsed_json;
+		parsed_json = json_tokener_parse(&read_buffer);
+		json_object_object_get_ex(parsed_json, "d", &data); 
+
+		json_object_object_get_ex(parsed_json, "co", &client_out);
+		
+		json_object_object_get_ex(parsed_json, "si", &server_in);
+		
+		json_object_object_get_ex(parsed_json, "so", &server_out);
+
+		int client_out_int, server_in_int, server_out_int, client_in_int;
+		
+		server_in_int = json_object_get_int(server_in);
+
+		client_out_int = json_object_get_int(client_out);
+
+		client_in_int = (long int) curtime;
+
+		server_out_int = json_object_get_int(server_out);
+
+		int time_travel;
+		memset(&time_travel, 0, sizeof(time_travel)); 
+
+		time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
+
+		printf("server_in_int: %d\n", server_in_int);
+		printf("client_out_int: %d\n", client_out_int);
+		printf("client_in_int: %d\n", client_in_int);
+		printf("server_out_int: %d\n", server_out_int);
+
+		printf("time_travel: %d\n", time_travel);
+
+
+		count_packages_received++;
 	
 	}
 }
@@ -387,26 +384,27 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) == XBEE_ENONE)
 		printf("Associating data: OK\n\n");
  
- 	/*// Creating message
-	// memset(&message_, 0, sizeof(message_));
-	// for (int i = 0; i < size_message - 8; i++)
-	// { 
-	// 	strcat(message_, "x"); 
-	// }
- 	// memset(&message_json, 0, sizeof(message_json)); 
-	// strcpy(message_json, "{ \"data\" :\"");
-	// strcat(message_json, message_); 
+ 	// Creating message
+	char message_[128];
+	memset(&message_, 0, sizeof(message_));
+	for (int i = 0; i < size_message - 8; i++)
+	{ 
+		strcat(message_, "x"); 	
+	}
+ 	memset(&message_json, 0, sizeof(message_json)); 
+	strcpy(message_json, "{\"d\":\"");
+	strcat(message_json, message_); 
 
-	// time_t client_out = time(NULL);
-	// strcat(message_json, "\", \"client_out\": "); 		
-	// sprintf(time_, "%ld", client_out);
-	// strcat(message_json, time_); 
+	time_t client_out = time(NULL);
+	strcat(message_json, "\",\"co\":"); 		
+	sprintf(time_, "%ld", client_out);
+	strcat(message_json, time_); 
 		  
-	// printf("message_json: %s \n", message_json);*/
+	printf("message_json: %s \n", message_json);
 
 	unsigned char retVal; 
 
-	if ((ret = xbee_conTx(con, &retVal, "Hello World! it is %d in the CLIENT", 2021)) != XBEE_ENONE) {
+	if ((ret = xbee_conTx(con, &retVal, message_json)) != XBEE_ENONE) {
         if (ret == XBEE_ETX) {
                 fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
         } else {
