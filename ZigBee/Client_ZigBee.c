@@ -84,17 +84,17 @@ int main(int argc, char *argv[]) {
 	// Creating a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
 
-	// Start thread to listen for server
-	if (pthread_mutex_init(&mutex_packages_received, NULL) != 0) {
-		perror("Failed to start mutex initialization");
-		exit(EXIT_FAILURE);
-	}
-
 	//Server args for listen_server thread
 	struct Server_ZigBee server_zigBee;
 	server_zigBee.con = con;
 	server_zigBee.ret = ret;
 	server_zigBee.xbee = xbee;
+
+	// Start thread to listen for server
+	if (pthread_mutex_init(&mutex_packages_received, NULL) != 0) {
+		perror("Failed to start mutex initialization");
+		exit(EXIT_FAILURE);
+	}
 
 	//thread begins 
 	pthread_create(&thread_listen_server, NULL, listen_server, (void *)&server_zigBee);
@@ -122,26 +122,32 @@ int main(int argc, char *argv[]) {
 		printf( "\r");
 	} 
 
-	printf(" \n");
-	 
+	printf("\n");
+	
+	// Cancel thread
+    void *res;
+	int s = pthread_cancel(thread_listen_server);
+    if (s != 0)
+        perror("pthread_cancel");
+
 	// Shutdown connection
 	xbee_conEnd(con);
 	// Shutdown libxbee
 	xbee_shutdown(xbee); 
 
-	// float jitter ;
-	// float rate;
+	float jitter ;
+	float rate;
 
-	// memset(&jitter, 0, sizeof(jitter)); 
-	// memset(&rate, 0, sizeof(rate)); 
+	memset(&jitter, 0, sizeof(jitter)); 
+	memset(&rate, 0, sizeof(rate)); 
 	
-	// jitter = get_average();
-	// rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
+	jitter = get_average();
+	rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
 
-	// printf("\n\nPackages sent: %d\n", number_packages);
-	// printf("Packages received: %d\n", count_packages_received);
-	// printf("Rate of lost packets: %.0f \n", rate );
-	// printf("Jitter: %.2f\n", jitter);
+	printf("\n\nPackages sent: %d\n", number_packages);
+	printf("Packages received: %d\n", count_packages_received);
+	printf("Rate of lost packets: %.0f \n", rate );
+	printf("Jitter: %.2f\n", jitter);
 	
 /*
 	// file_name: server_hostname + number_packages + jitter.txt
@@ -258,7 +264,7 @@ void * listen_server(void *arg)
 {	
 	struct Server_ZigBee *server_zigBee;
 	server_zigBee = (struct  Server_ZigBee  *) arg;
-
+	
 	//No more packages should be received than sent 
 	while (count_packages_received < number_packages){ 
 		receive_data(server_zigBee->xbee, server_zigBee->con, server_zigBee->ret);	
@@ -271,6 +277,7 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	// printf("callback_function\n");
 	if(count_packages_received < number_packages){
 		
+		pthread_mutex_lock(&mutex_packages_received);
 		// Get current time
 		time_t curtime;
 		struct tm *timeinfo;
@@ -316,6 +323,7 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 		printf("time_travel: %d\n\n", time_travel);
 
 		count_packages_received++;
+		pthread_mutex_unlock(&mutex_packages_received);
 	}
 }
 
