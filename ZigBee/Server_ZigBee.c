@@ -128,15 +128,15 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 	time_t server_out = time(NULL);
 	char time_[128];
 
-	strcat(read_buffer, ",\"si\":"); 
+	strcat(read_buffer, ",\"c\":"); 
 	sprintf(time_, "%ld", server_in);
 	strcat(read_buffer, time_); 
 	
-	strcat(read_buffer, ",\"so\":"); 
+	strcat(read_buffer, ",\"d\":"); 
 	sprintf(time_, "%ld", server_out);
 	strcat(read_buffer, time_); 
 	
-	strcat(read_buffer, "} "); 
+	strcat(read_buffer, "}"); 
 	printf("%s\n", &read_buffer[0]);
 
 	// Transmit a message // maximum 72 characters

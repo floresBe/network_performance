@@ -21,13 +21,14 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
-void * listen_server(void *arg);
+
+void * listen_server(void *arg); //thead
+
 float get_average();
 int print_to_file(char * filename, int data1, float data2);
 
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
-
 
 int size_message, number_packages, count_packages_received = 0;
 char read_buffer[BUFFER_SIZE];
@@ -63,8 +64,8 @@ int main(int argc, char *argv[]) {
 	size_message = atoi(argv[1]);
 	number_packages = atoi(argv[2]);
 
-	if(size_message > 128){
-		printf("size_message should be smaller than 128");
+	if(size_message < 8 || size_message > 20){
+		printf("size_message should be smaller than 20 and bigger than 8");
 		exit(1);
 	}
 
@@ -89,22 +90,23 @@ int main(int argc, char *argv[]) {
 		exit(EXIT_FAILURE);
 	}
 
-	//Server args for listen_server
+	//Server args for listen_server thread
 	struct Server_ZigBee server_zigBee;
 	server_zigBee.con = con;
 	server_zigBee.ret = ret;
 	server_zigBee.xbee = xbee;
 
+	//thread begins 
 	pthread_create(&thread_listen_server, NULL, listen_server, (void *)&server_zigBee);
 
 	// Sending messages number_packages times
 	for (int i = 0; i < number_packages; i++)
-	{
-		printf("package: %d - ",1+i);
+	{ 
 		// Send data to the remote xbee 
 		send_data(xbee, con, ret); 
+		printf("package %d send\n\n", i);
 	}
-	
+
 	clock_t start_time;
 	clock_t end_t;
 	double seconds_elapsed = 0; 
@@ -116,8 +118,7 @@ int main(int argc, char *argv[]) {
 		// printf("%d\n", start_time);
 		end_t = clock(); 
 		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
-		
-		printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
+		printf( "[ WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
 		printf( "\r");
 	} 
 
@@ -267,103 +268,59 @@ void * listen_server(void *arg)
 
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data)
 {
-	printf("callback_function\n");
+	// printf("callback_function\n");
 	if(count_packages_received < number_packages){
-	
+		
+		// Get current time
+		time_t curtime;
+		struct tm *timeinfo;
+		time (&curtime);
+
 		// Store data in buffer
 		memset(read_buffer, '\0', BUFFER_SIZE);
 		strcpy(read_buffer, (*pkt)->data);
-		printf("read_buffer: %s\n",read_buffer);
-
-		// Get current time and date
-		// Initialize date/time struct
-		time_t curtime;
-		struct tm *timeinfo;
-		
-		// Get system current date/time
-		time (&curtime);
-		
-		// Format date/time variable
-		timeinfo = localtime(&curtime);
-		
-		// Get current date
-		char dateString[20];
-		strftime(dateString, sizeof(dateString)-1, "%Y-%m-%d", timeinfo);
-		
-		// Get current time
-		char timeString[40];
-		strftime(timeString, sizeof(timeString), "%H:%M:%S", timeinfo);
-		
-		// Create json object
-		json_object *jobj = json_object_new_object();
-		
-		// Add date/time objects into main json object
-		json_object *jdate = json_object_new_string(dateString);
-		json_object_object_add(jobj, "Date", jdate);
-		json_object *jtime = json_object_new_string(timeString);
-		json_object_object_add(jobj, "Time", jtime);
-
-		// Add the converted value to the json object
-		json_object *jmoisture = json_object_new_string(&read_buffer[0]);
-		json_object_object_add(jobj,"Data", jmoisture);
-		
-		// Copy the json string to the buffer
-		//strcpy(read_buffer, json_object_to_json_string(jobj));
-		
-		printf("JSON FORMAT: %s\n\n", &read_buffer[0]);
+		printf("package %d received \n\n", count_packages_received);
 
 		char *message_json[MAXLINE];
+		struct json_object *parsed_json;
 		struct json_object *server_in;
 		struct json_object *client_out;
 		struct json_object *server_out;
 		struct json_object *data;
-		 
 
 		memset(&message_json, 0, sizeof(message_json)); 
 
-		struct json_object *parsed_json;
 		parsed_json = json_tokener_parse(&read_buffer);
-		json_object_object_get_ex(parsed_json, "d", &data); 
-
-		json_object_object_get_ex(parsed_json, "co", &client_out);
 		
-		json_object_object_get_ex(parsed_json, "si", &server_in);
-		
-		json_object_object_get_ex(parsed_json, "so", &server_out);
+		json_object_object_get_ex(parsed_json, "a", &data);
+		json_object_object_get_ex(parsed_json, "b", &client_out);
+		json_object_object_get_ex(parsed_json, "c", &server_in);
+		json_object_object_get_ex(parsed_json, "d", &server_out);
 
 		int client_out_int, server_in_int, server_out_int, client_in_int;
 		
-		server_in_int = json_object_get_int(server_in);
-
 		client_out_int = json_object_get_int(client_out);
-
-		client_in_int = (long int) curtime;
-
+		server_in_int = json_object_get_int(server_in);
 		server_out_int = json_object_get_int(server_out);
+		client_in_int = (long int) curtime;
 
 		int time_travel;
 		memset(&time_travel, 0, sizeof(time_travel)); 
-
 		time_travel = (server_in_int - client_out_int) + (client_in_int - server_out_int);
 
-		printf("server_in_int: %d\n", server_in_int);
-		printf("client_out_int: %d\n", client_out_int);
-		printf("client_in_int: %d\n", client_in_int);
-		printf("server_out_int: %d\n", server_out_int);
+		printf("server_in: %d\n", server_in_int);
+		printf("client_out: %d\n", client_out_int);
+		printf("client_in: %d\n", client_in_int);
+		printf("server_out: %d\n\n", server_out_int);
 
-		printf("time_travel: %d\n", time_travel);
-
+		printf("time_travel: %d\n\n", time_travel);
 
 		count_packages_received++;
-	
 	}
 }
 
 void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
-{
-	// printf("package: %d -",count_packages_received);
-	// printf("receive_data\n");
-	
+{  
 	// Associate data with a connection
 	if ((ret = xbee_conDataSet(con, xbee, NULL)) != XBEE_ENONE)
 		printf("Associating data error: %d\n\n", ret);
@@ -375,40 +332,37 @@ void receive_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 }
 
 void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
-{	
-	printf("send_data\n");
+{	 
 	char message_json[MAXLINE];
 	char time_[MAXLINE]; 
-
+	char message_[72];
+	
 	// Associate data with a connection
-	if ((ret = xbee_conDataSet(con, xbee, NULL)) == XBEE_ENONE)
-		printf("Associating data: OK\n\n");
+	if ((ret = xbee_conDataSet(con, xbee, NULL)) != XBEE_ENONE)
+		printf("Associating data error: %d\n\n",ret);
  
- 	// Creating message
-	char message_[128];
+ 	// Creating json message
 	memset(&message_, 0, sizeof(message_));
 	for (int i = 0; i < size_message - 8; i++)
 	{ 
 		strcat(message_, "x"); 	
 	}
  	memset(&message_json, 0, sizeof(message_json)); 
-	strcpy(message_json, "{\"d\":\"");
+	strcpy(message_json, "{\"a\":\"");
 	strcat(message_json, message_); 
 
 	time_t client_out = time(NULL);
-	strcat(message_json, "\",\"co\":"); 		
+	strcat(message_json, "\",\"b\":"); 		
 	sprintf(time_, "%ld", client_out);
 	strcat(message_json, time_); 
 		  
-	printf("message_json: %s \n", message_json);
-
 	unsigned char retVal; 
 
 	if ((ret = xbee_conTx(con, &retVal, message_json)) != XBEE_ENONE) {
         if (ret == XBEE_ETX) {
-                fprintf(stderr, "a transmission error occured... (0x%02X)\n", retVal);
+                fprintf(stderr, "A transmission error occured... (0x%02X)\n", retVal);
         } else {
-                fprintf(stderr, "an error occured... %s\n", xbee_errorToStr(ret));
+                fprintf(stderr, "An error occured... %s\n", xbee_errorToStr(ret));
         } 
 	}
 }
