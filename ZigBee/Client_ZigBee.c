@@ -16,7 +16,7 @@
 #define MAXLINE 1024
 
 // Functions
-struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret);
+struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret,  char USB_port_number[2]);
 struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
@@ -31,6 +31,7 @@ pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
 
 int size_message, number_packages, count_packages_received = 0;
+char xbee_address[16], USB_port_number[2];
 char read_buffer[BUFFER_SIZE];
 
 int len;
@@ -52,18 +53,18 @@ int main(int argc, char *argv[]) {
 	xbee_err ret; 
 
 	// Verifing args
-	if (argc != 3) {
-		fprintf(stderr,"It should be used like this: size_message number_packages\n");
+	if (argc != 5) {
+		fprintf(stderr,"It should be used like this: %s xbee_address USB_port_number size_message number_packages\n", argv[0]);
 		exit(1);
 	}
 	
 	//To Do:
-	// address = argv[1];
-	// USBX = argv[x]
+	strcpy(xbee_address, argv[1]);
+	strcpy(USB_port_number, argv[2]); 
+	size_message = atoi(argv[3]);
+	number_packages = atoi(argv[4]);
 
-	size_message = atoi(argv[1]);
-	number_packages = atoi(argv[2]);
-
+	printf("USB_port_number %s\n", USB_port_number);
 	if(size_message < 8 || size_message > 20){
 		printf("size_message should be smaller than 20 and bigger than 8");
 		exit(1);
@@ -79,7 +80,7 @@ int main(int argc, char *argv[]) {
 	setenv("TZ", "PST8PDT", 1); 
 
     // Configure xbee
-	struct xbee *xbee = configure_xbee(xbee, ret);
+	struct xbee *xbee = configure_xbee(xbee, ret, USB_port_number);
 	
 	// Creating a new connection
 	struct xbee_con *con = connection_xbee(xbee, con, ret);
@@ -220,11 +221,13 @@ int main(int argc, char *argv[]) {
 	return 0; 
 }
 
-struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret)
+struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret, char USB_port_number[2])
 {
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
-	if((ret = xbee_setup(&xbee, "xbeeZB", "/dev/ttyUSB1", 9600))== XBEE_ENONE)
+	char new[] = "/dev/ttyUSB";
+	strcat(new, USB_port_number);
+	if((ret = xbee_setup(&xbee, "xbeeZB", new , 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
 	else
 		printf("Configuring xbee: %s(Code: %d)\n", xbee_errorToStr(ret), ret);
@@ -258,7 +261,6 @@ struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_
 	// Return connection
 	return con;
 }
-
 
 void * listen_server(void *arg)
 {	
