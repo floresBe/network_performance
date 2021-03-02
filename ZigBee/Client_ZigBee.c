@@ -151,7 +151,6 @@ int main(int argc, char *argv[]) {
 	printf("Rate of lost packets: %.0f \n", rate );
 	printf("Jitter: %.2f\n", jitter);
 	
-/*
 	// file_name: server_hostname + number_packages + jitter.txt
 
 	char s_message[MAXLINE];
@@ -217,7 +216,6 @@ int main(int argc, char *argv[]) {
 	strcat(file_data_rate_name, "_rate");
 
 	create_gnu_file(file_data_rate_gnu_name, file_data_rate_name);
-*/
 
 	return 0; 
 }
