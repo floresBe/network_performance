@@ -17,7 +17,7 @@
 
 // Functions
 struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret,  char USB_port_number[2]);
-struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
+struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret, char xbee_address[16]);
 void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
 	size_message = atoi(argv[3]);
 	number_packages = atoi(argv[4]);
 
-	printf("USB_port_number %s\n", USB_port_number);
+	// printf("USB_port_number %s\n", USB_port_number);
+
 	if(size_message < 8 || size_message > 20){
 		printf("size_message should be smaller than 20 and bigger than 8");
 		exit(1);
@@ -83,7 +84,7 @@ int main(int argc, char *argv[]) {
 	struct xbee *xbee = configure_xbee(xbee, ret, USB_port_number);
 	
 	// Creating a new connection
-	struct xbee_con *con = connection_xbee(xbee, con, ret);
+	struct xbee_con *con = connection_xbee(xbee, con, ret, xbee_address);
 
 	//Server args for listen_server thread
 	struct Server_ZigBee server_zigBee;
@@ -226,6 +227,7 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret, char USB_port_numb
 	// Setup libxbee, using USB port to serial adapter
 	// ttyUSBX at 9600 baud and check if errors
 	char new[] = "/dev/ttyUSB";
+	// printf("new %s \n", new);
 	strcat(new, USB_port_number);
 	if((ret = xbee_setup(&xbee, "xbeeZB", new , 9600))== XBEE_ENONE)
 		printf("Configuring xbee: OK\n");
@@ -235,14 +237,33 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret, char USB_port_numb
 	return xbee;
 }
 
-struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret)
+struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret, char xbee_address[16])
 {
+	char * subbuff1[2];
+	memset(&subbuff1, 0, sizeof(subbuff1));
+
+	memcpy(&subbuff1, &xbee_address[0], 2);
+	subbuff1[2] = '\0';
+	// printf("substring1 %s \n", subbuff1);
+	
+	char * subbuff2[4]; 
+	memset(&subbuff2, 0, sizeof(subbuff2));
+	strcpy(subbuff2, "0x");	
+	// printf("substring2 %s \n", subbuff2);
+	subbuff1[2] = '\0';
+	// printf("substring1 %s \n", subbuff1);
+
+	strcat(subbuff2, subbuff1);
+	subbuff2[4]='\0';
+	// printf("substring2 %s \n\n", subbuff2);
+
+
+
 	// Address of the remote xbee
 	struct xbee_conAddress address;
-
 	memset(&address, 0, sizeof(address));
-
 	address.addr64_enabled = 1;
+
 	address.addr64[0] = 0x00;
 	address.addr64[1] = 0x13;
 	address.addr64[2] = 0xA2;
