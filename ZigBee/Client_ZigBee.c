@@ -67,10 +67,8 @@ int main(int argc, char *argv[]) {
 	size_message = atoi(argv[3]);
 	number_packages = atoi(argv[4]);
 
-	// printf("USB_port_number %s\n", USB_port_number);
-
 	if(size_message < 8 || size_message > 20){
-		printf("size_message should be smaller than 20 and bigger than 8");
+		printf("size_message should be smaller than 20 and bigger than 8\n");
 		exit(1);
 	}
 
@@ -115,7 +113,7 @@ int main(int argc, char *argv[]) {
 	clock_t start_time;
 	clock_t end_t;
 	double seconds_elapsed = 0; 
-	double timeout = number_packages * 0.1; //100 millisecond for every send message
+	double timeout = number_packages * 0.5; //500 millisecond for every send message
 	start_time = clock();  
 
 	// Timeout wating
@@ -175,24 +173,6 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret, char USB_port_numb
 
 struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret, char xbee_address[16])
 {
-	// char * subbuff1[2];
-	// memset(&subbuff1, 0, sizeof(subbuff1));
-
-	// memcpy(&subbuff1, &xbee_address[0], 2);
-	// subbuff1[2] = '\0';
-	// // printf("substring1 %s \n", subbuff1);
-	
-	// char * subbuff2[4]; 
-	// memset(&subbuff2, 0, sizeof(subbuff2));
-	// strcpy(subbuff2, "0x");	//sorintf(subbuff2,"%0x")
-	// // printf("substring2 %s \n", subbuff2);
-	// subbuff1[2] = '\0';
-	// // printf("substring1 %s \n", subbuff1);
-
-	// strcat(subbuff2, subbuff1);
-	// subbuff2[4]='\0';
-	// printf("substring2 %s \n\n", subbuff2);
-
 	// Address of the remote xbee
 	struct xbee_conAddress address;
 	memset(&address, 0, sizeof(address));
