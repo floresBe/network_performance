@@ -16,16 +16,20 @@
 #define MAXLINE 1024
 
 // Functions
+//xbee
 struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret,  char USB_port_number[2]);
 struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret, char xbee_address[16]);
 void receive_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void send_data(struct xbee *xbee, struct xbee_con *con, xbee_err ret);
 void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt **pkt, void **data);
-
-void * listen_server(void *arg); //thead
+//thead
+void * listen_server(void *arg); 
 
 float get_average();
+
 int print_to_file(char * filename, int data1, float data2);
+void create_gnu_files(float rate, float jitter);
+int create_txt_file(char * filename, char * file_data_name);
 
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
@@ -58,7 +62,6 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	
-	//To Do:
 	strcpy(xbee_address, argv[1]);
 	strcpy(USB_port_number, argv[2]); 
 	size_message = atoi(argv[3]);
@@ -151,72 +154,7 @@ int main(int argc, char *argv[]) {
 	printf("Rate of lost packets: %.0f \n", rate );
 	printf("Jitter: %.2f\n", jitter);
 	
-	// file_name: server_hostname + number_packages + jitter.txt
-
-	char s_message[MAXLINE];
-	char * file_data_jitter_name[MAXLINE];
-
-	memset(&s_message, 0, sizeof(s_message)); 
-	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
-	
-	strcat(file_data_jitter_name, argv[1]);
-	sprintf(s_message, "_%d", number_packages);
-	strcat(file_data_jitter_name, s_message);
-	strcat(file_data_jitter_name, "_jitter");
-	strcat(file_data_jitter_name, ".txt");
-
-	print_to_file(file_data_jitter_name, size_message, jitter);
-
-	// file_name: server_hostname + number_packages + jitter + gnu.txt
-	char * file_data_jitter_gnu_name[MAXLINE];
-
-	memset(&file_data_jitter_gnu_name, 0, sizeof(file_data_jitter_gnu_name)); 
-	strcat(file_data_jitter_gnu_name, argv[1]);
-	strcat(file_data_jitter_gnu_name, s_message);
-	strcat(file_data_jitter_gnu_name, "_jitter");  
-	strcat(file_data_jitter_gnu_name, "_gnu");
-	strcat(file_data_jitter_gnu_name, ".txt"); 
-	
-	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
-	
-	strcat(file_data_jitter_name, argv[1]);
-	sprintf(s_message, "_%d", number_packages);
-	strcat(file_data_jitter_name, s_message);
-	strcat(file_data_jitter_name, "_jitter");
-
-	create_gnu_file(file_data_jitter_gnu_name, file_data_jitter_name);
-
-	// file_name: server_hostname + number_packages + rate.txt
- 	
-	char * file_data_rate_name[MAXLINE];
-	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
-
-	strcat(file_data_rate_name, argv[1]);
-	sprintf(s_message, "_%d", number_packages);
-	strcat(file_data_rate_name, s_message);
-	strcat(file_data_rate_name, "_rate");  
-	strcat(file_data_rate_name, ".txt"); 
-
-	print_to_file(file_data_rate_name, size_message, rate);
-
-	char * file_data_rate_gnu_name[MAXLINE];
-
-	memset(&file_data_rate_gnu_name, 0, sizeof(file_data_rate_gnu_name)); 
-	strcat(file_data_rate_gnu_name, argv[1]);
-	strcat(file_data_rate_gnu_name, s_message);
-	strcat(file_data_rate_gnu_name, "_rate");  
-	strcat(file_data_rate_gnu_name, "_gnu");
-	strcat(file_data_rate_gnu_name, ".txt"); 
-	
-	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
-	
-	strcat(file_data_rate_name, argv[1]);
-	sprintf(s_message, "_%d", number_packages);
-	strcat(file_data_rate_name, s_message);
-	strcat(file_data_rate_name, "_rate");
-
-	create_gnu_file(file_data_rate_gnu_name, file_data_rate_name);
-
+	create_gnu_files(rate,jitter);
 	return 0; 
 }
 
@@ -237,32 +175,30 @@ struct xbee * configure_xbee(struct xbee *xbee, xbee_err ret, char USB_port_numb
 
 struct xbee_con * connection_xbee(struct xbee *xbee, struct xbee_con *con, xbee_err ret, char xbee_address[16])
 {
-	char * subbuff1[2];
-	memset(&subbuff1, 0, sizeof(subbuff1));
+	// char * subbuff1[2];
+	// memset(&subbuff1, 0, sizeof(subbuff1));
 
-	memcpy(&subbuff1, &xbee_address[0], 2);
-	subbuff1[2] = '\0';
-	// printf("substring1 %s \n", subbuff1);
+	// memcpy(&subbuff1, &xbee_address[0], 2);
+	// subbuff1[2] = '\0';
+	// // printf("substring1 %s \n", subbuff1);
 	
-	char * subbuff2[4]; 
-	memset(&subbuff2, 0, sizeof(subbuff2));
-	strcpy(subbuff2, "0x");	
-	// printf("substring2 %s \n", subbuff2);
-	subbuff1[2] = '\0';
-	// printf("substring1 %s \n", subbuff1);
+	// char * subbuff2[4]; 
+	// memset(&subbuff2, 0, sizeof(subbuff2));
+	// strcpy(subbuff2, "0x");	//sorintf(subbuff2,"%0x")
+	// // printf("substring2 %s \n", subbuff2);
+	// subbuff1[2] = '\0';
+	// // printf("substring1 %s \n", subbuff1);
 
-	strcat(subbuff2, subbuff1);
-	subbuff2[4]='\0';
+	// strcat(subbuff2, subbuff1);
+	// subbuff2[4]='\0';
 	// printf("substring2 %s \n\n", subbuff2);
-
-
 
 	// Address of the remote xbee
 	struct xbee_conAddress address;
 	memset(&address, 0, sizeof(address));
 	address.addr64_enabled = 1;
 
-	address.addr64[0] = 0x00;
+	address.addr64[0] = 0x00; 
 	address.addr64[1] = 0x13;
 	address.addr64[2] = 0xA2;
 	address.addr64[3] = 0x00;
@@ -435,7 +371,91 @@ int print_to_file(char * filename, int data1, float data2)
    return 1;
 }
 
-int create_gnu_file(char * filename, char * file_data_name)
+void create_gnu_files(float rate, float jitter){
+
+	// file_name: xbee_address + number_packages + jitter.txt
+
+	char s_message[MAXLINE];
+
+	char * file_data_jitter_name[MAXLINE];
+
+	memset(&s_message, 0, sizeof(s_message)); 
+
+	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
+	strcat(file_data_jitter_name, "gnu_files/");
+	strcat(file_data_jitter_name, xbee_address);
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_jitter_name, s_message);
+	strcat(file_data_jitter_name, "_jitter");
+	strcat(file_data_jitter_name, ".txt");
+
+	print_to_file(file_data_jitter_name, size_message, jitter);
+
+
+	// file_name: xbee_address + number_packages + jitter + gnu.txt
+	char * file_data_jitter_gnu_name[MAXLINE];
+
+	memset(&file_data_jitter_gnu_name, 0, sizeof(file_data_jitter_gnu_name)); 
+
+	strcat(file_data_jitter_gnu_name, "gnu_files/");
+	strcat(file_data_jitter_gnu_name, xbee_address);
+	strcat(file_data_jitter_gnu_name, s_message);
+	strcat(file_data_jitter_gnu_name, "_jitter");  
+	strcat(file_data_jitter_gnu_name, "_gnu");
+	strcat(file_data_jitter_gnu_name, ".txt"); 
+	
+	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
+	
+	strcat(file_data_jitter_name, "gnu_files/");
+	strcat(file_data_jitter_name, xbee_address);
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_jitter_name, s_message);
+	strcat(file_data_jitter_name, "_jitter");
+
+	create_txt_file(file_data_jitter_gnu_name, file_data_jitter_name);
+
+
+
+
+	// file_name: xbee_address + number_packages + rate.txt
+	char * file_data_rate_name[MAXLINE];
+
+	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
+
+	strcat(file_data_rate_name, "gnu_files/");
+	strcat(file_data_rate_name, xbee_address);
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_rate_name, s_message);
+	strcat(file_data_rate_name, "_rate");  
+	strcat(file_data_rate_name, ".txt"); 
+
+	print_to_file(file_data_rate_name, size_message, rate);
+
+	// file_name: xbee_address + number_packages + jitrateter + gnu.txt
+	char * file_data_rate_gnu_name[MAXLINE];
+
+	memset(&file_data_rate_gnu_name, 0, sizeof(file_data_rate_gnu_name)); 
+
+	strcat(file_data_rate_gnu_name, "gnu_files/");
+	strcat(file_data_rate_gnu_name, xbee_address);
+	strcat(file_data_rate_gnu_name, s_message);
+	strcat(file_data_rate_gnu_name, "_rate");  
+	strcat(file_data_rate_gnu_name, "_gnu");
+	strcat(file_data_rate_gnu_name, ".txt"); 
+	
+	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
+	
+	strcat(file_data_rate_name, "gnu_files/");
+	strcat(file_data_rate_name, xbee_address);
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_rate_name, s_message);
+	strcat(file_data_rate_name, "_rate");
+
+	create_txt_file(file_data_rate_gnu_name, file_data_rate_name);
+
+}
+
+int create_txt_file(char * filename, char * file_data_name)
 {
    FILE * ou_file; 
    
@@ -466,4 +486,3 @@ int create_gnu_file(char * filename, char * file_data_name)
 
    return 1;
 }
-
