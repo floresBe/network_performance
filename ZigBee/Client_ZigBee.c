@@ -29,7 +29,7 @@ float get_average();
 
 int print_to_file(char * filename, int data1, float data2);
 void create_gnu_files(float rate, float jitter);
-int create_txt_file(char * filename, char * file_data_name);
+int create_txt_file(char * filename, char * file_data_name, char desctiption[MAXLINE]);
 
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
 	memset(&jitter, 0, sizeof(jitter)); 
 	memset(&rate, 0, sizeof(rate)); 
 	
-	jitter = get_average();
+    jitter = get_average();
 	rate = abs((((float) count_packages_received/(float)number_packages)* 100) - 100);
 
 	printf("\n\nPackages sent: %d\n", number_packages);
@@ -257,6 +257,7 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt 
 		printf("client_in: %d\n", client_in_int);
 		printf("server_out: %d\n\n", server_out_int);
 
+		times[count_packages_received] = time_travel;
 		printf("time_travel: %d\n\n", time_travel);
 
 		count_packages_received++;
@@ -313,17 +314,17 @@ void send_data(struct xbee *xbee, struct xbee_con *con,xbee_err ret)
 }
 
 float get_average(){
-	float avrg = 0;
-
-	for (int i = 0; i < i_package - 1; i++)
+	float avrg = 0; 
+	
+	pthread_mutex_lock(&mutex_packages_received);
+	for (int i = 0; i < count_packages_received-1; i++)
 	{  
-		// printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
-		int difference = (times)[i + 1] - (times)[i]; 
-		// printf("difference: %d\n", difference);
+		int difference = (times)[i + 1] - (times)[i];  
 		avrg += (float) difference;
-	}
-	// printf("sum: %f\n", avrg);
+	} 
+
 	avrg = avrg/(float)count_packages_received; 
+	pthread_mutex_unlock(&mutex_packages_received);
 	return avrg;
 }
 
@@ -392,13 +393,10 @@ void create_gnu_files(float rate, float jitter){
 	strcat(file_data_jitter_name, s_message);
 	strcat(file_data_jitter_name, "_jitter");
 
-	create_txt_file(file_data_jitter_gnu_name, file_data_jitter_name);
-
-
-
+	create_txt_file(file_data_jitter_gnu_name, file_data_jitter_name, "Jitter");
 
 	// file_name: xbee_address + number_packages + rate.txt
-	char * file_data_rate_name[MAXLINE];
+	char * file_data_rate_name[MAXLINE]; 
 
 	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
 
@@ -431,11 +429,11 @@ void create_gnu_files(float rate, float jitter){
 	strcat(file_data_rate_name, s_message);
 	strcat(file_data_rate_name, "_rate");
 
-	create_txt_file(file_data_rate_gnu_name, file_data_rate_name);
+	create_txt_file(file_data_rate_gnu_name, file_data_rate_name,"Tasa de paquetes perdidos");
 
 }
 
-int create_txt_file(char * filename, char * file_data_name)
+int create_txt_file(char * filename, char * file_data_name, char desctiption[MAXLINE])
 {
    FILE * ou_file; 
    
@@ -450,16 +448,16 @@ int create_txt_file(char * filename, char * file_data_name)
 	fprintf(ou_file,"dashed defaultplex \"Helvetica\" 14\n");
 	fprintf(ou_file,"set output '%s_grafica.ps'\n", file_data_name);
 	fprintf(ou_file,"set xlabel \"Tamano del paquete UDP\" \n");
-	fprintf(ou_file,"set ylabel \"Tasa de paquetes perdidos (%c) \" \n", '%');
+	fprintf(ou_file,"set ylabel \"%s (%c) \" \n",desctiption, '%');
 	fprintf(ou_file,"set key left top\n");
-	fprintf(ou_file,"set title \"Tasa de paquetes perdidos en funcion del tamano del buffer UDP\" \n");
+	fprintf(ou_file,"set title \"%s en funcion del tamano del buffer UDP\" \n", desctiption);
 	fprintf(ou_file,"#set xrange [ 0 : 130 ] noreverse nowriteback\n");
 	fprintf(ou_file,"#set yrange [ -.5 : 14 ] noreverse nowriteback\n");
 	fprintf(ou_file,"#set mxtics 5.000000\n");
 	fprintf(ou_file,"#set mytics 1.000000\n");
 	fprintf(ou_file,"#set xtics border mirror norotate 1\n");
 	fprintf(ou_file,"#set ytics border mirror norotate 0.5\n");
-	fprintf(ou_file,"plot \"%s.txt\" using 1:2 title \"Tasa de paquetes perdidos\" w lp pt 5 pi -4 lt rgb \"violet\", \\\n", file_data_name);
+	fprintf(ou_file,"plot \"%s.txt\" using 1:2 title \"%s\" w lp pt 5 pi -4 lt rgb \"violet\", \\\n", file_data_name, desctiption);
 	fprintf(ou_file,"#w linespoint\n");
 	fprintf(ou_file,"#    EOF\n");
 
