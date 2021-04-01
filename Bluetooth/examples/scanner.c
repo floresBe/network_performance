@@ -19,7 +19,7 @@ main() {
     exit(1);
   }  
 
-  // Get device Information
+  // Get device Infor mation
   struct hci_dev_info device_info;
   if (hci_devinfo(device_id, &device_info) == 0) {
     char device_address[18];

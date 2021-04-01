@@ -16,8 +16,6 @@ int main(int argc, char **argv)
 
     struct sockaddr_rc addrress = { 0 };
     int s, status;
-
-    // char dest[18]="";// = "B0:10:41:3F:6E:80";//My destination address Laptop
     char device_name[20]="flores";
 
     s = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
@@ -25,8 +23,6 @@ int main(int argc, char **argv)
     addrress.rc_channel = (uint8_t) 1;//must use sdp to work in real devices 
 
     printf("Search for BT Devices...\n");
-
-    //search   
 
     inquiry_info *ii = NULL;
     int max_rsp, num_rsp;
@@ -61,11 +57,11 @@ int main(int argc, char **argv)
             strcpy(name, "[unknown]");
         }
 
-        printf("\nFind #%d\n",i);
-        printf("Addr:%s    Name:%s\n", addr, name);
+        // printf("\nFind #%d\n",i);
+        // printf("Addr:%s    Name:%s\n", addr, name);
         
         int a=strcmp(name, device_name);
-        printf("compare:%d\n",a);
+        // printf("compare:%d\n",a);
         
         if (!a){   // if name mached 
             str2ba( addr, &addrress.rc_bdaddr );   
@@ -85,7 +81,7 @@ int main(int argc, char **argv)
     status = connect(s, (struct sockaddr *)&addrress, sizeof(addrress));
     //successful, connect() returns 0.
 
-    printf("connection status: %d\n\n",status);//0 show OK
+    // printf("connection status: %d\n\n",status);//0 show OK
 
     // send a message to server
     if( status != 0 ) {
@@ -94,9 +90,26 @@ int main(int argc, char **argv)
             exit(0);
         }
     }  
-    status = write(s, "hello!", 6);
+    status = write(s, "hello from client", 6);
     if (status == 6){
         printf("Send data to server done\n");
+    }
+    
+    listen(s, 1);
+    char buf[1024] = { 0 };
+    int bytes_read;
+    int client = accept(s, (struct sockaddr *)&addrress, sizeof(addrress));
+     ba2str( &addrress.rc_bdaddr, buf );
+    fprintf(stderr, "accepted connection from %s\n", buf);
+
+
+    memset(buf, 0, sizeof(buf));
+
+    // read data from the client
+    bytes_read = read(client, buf, sizeof(buf));
+
+    if( bytes_read > 0 ) {
+        printf("received [%s]\n", buf);
     }
 
     printf("Closing socket\n");
