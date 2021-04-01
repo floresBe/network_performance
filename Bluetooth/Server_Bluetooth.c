@@ -46,7 +46,14 @@ main(int argc, char **argv)
         printf("received [%s]\n", buf);
     }
 
-    write(s, "hello from server!", 6);
+    int status;
+
+    status = write(client, "hello from server", 6);
+    printf("status %d\n", status );
+
+    if (status == 6){
+        printf("Send data to client done\n");
+    }
 
     // close connection
     close(client);
