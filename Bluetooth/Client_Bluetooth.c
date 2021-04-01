@@ -90,7 +90,7 @@ int main(int argc, char **argv)
             exit(0);
         }
     }  
-    status = write(s, "hello from client", 6);
+    status = write(s, "hi from client", 6);
     if (status == 6){
         printf("Send data to server done\n");
     }
@@ -98,16 +98,17 @@ int main(int argc, char **argv)
     listen(s, 1);
     char buf[1024] = { 0 };
     int bytes_read;
-    int client = accept(s, (struct sockaddr *)&addrress, sizeof(addrress));
-     ba2str( &addrress.rc_bdaddr, buf );
+    socklen_t opt = sizeof(addrress);
+
+    ba2str( &addrress.rc_bdaddr, buf );
     fprintf(stderr, "accepted connection from %s\n", buf);
-
-
     memset(buf, 0, sizeof(buf));
 
-    // read data from the client
-    bytes_read = read(client, buf, sizeof(buf));
-
+    // read data from the server
+    bytes_read = read(s, buf, sizeof(buf));
+    
+    printf("bytes_read [%d]\n", bytes_read);
+    
     if( bytes_read > 0 ) {
         printf("received [%s]\n", buf);
     }
