@@ -1,1 +1,0 @@
-cmd_/home/aale/Downloads/LINUX_DRIVER/uart/bluetooth_uart_driver/Module.symvers := sed 's/ko$$/o/' /home/aale/Downloads/LINUX_DRIVER/uart/bluetooth_uart_driver/modules.order | scripts/mod/modpost  -a   -o /home/aale/Downloads/LINUX_DRIVER/uart/bluetooth_uart_driver/Module.symvers -e -i Module.symvers   -T -
