@@ -22,7 +22,6 @@ float get_average();
 void create_gnu_files(float rate, float jitter, char device_name[MAXLINE]);
 int create_txt_file(char * filename, char * file_data_name, char desctiption[MAXLINE]);
 
-
 pthread_t thread_listen_server;
 pthread_mutex_t mutex_packages_received;
 
@@ -138,22 +137,15 @@ int main(int argc, char **argv)
     {   
         send_data(s);
         printf("package %d send\n\n", i);
+		sleep(1);
     }
  
-	clock_t start_time;
-	clock_t end_t;
-	double seconds_elapsed = 0; 
-	double timeout = number_packages * 0.5; //500 millisecond for every send message
-	start_time = clock();  
-
-	// Timeout wating
-    while ( seconds_elapsed < timeout * 1000) {
-		// printf("%d\n", start_time);
-		end_t = clock(); 
-		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
-		printf( "[ WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 1000);
-		printf( "\r");
-	} 
+	// sleep(1);
+	// int timeout = number_packages * 0.5; 
+	// // Timeout wating
+	// printf("[ WAITING FOR %d SECONDS ]\n",timeout);
+	// printf("\n");
+	// sleep(timeout);
 
 	printf("\n");
     
@@ -163,7 +155,6 @@ int main(int argc, char **argv)
 
     printf("Closing socket\n");
     close(s);
-    free( ii );
     close( sock );
 
     float jitter ;
@@ -193,7 +184,7 @@ void send_data(int s)
 	
  	// Creating json message
 	memset(&message_, 0, sizeof(message_));
-	for (int i = 0; i < size_message - 8; i++)
+	for (int i = 0; i < size_message; i++)
 	{ 
 		strcat(message_, "x"); 	
 	}
@@ -328,7 +319,7 @@ int print_to_file(char * filename, int data1, float data2)
 void create_gnu_files(float rate, float jitter, char device_name[MAXLINE]){
 
 	// file_name: device_name + number_packages + jitter.txt
-    printf(" create_gnu_files \n");
+    // printf("create_gnu_files \n");
 	char s_message[MAXLINE];
 
 	char * file_data_jitter_name[MAXLINE];

@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "json.h": "c"
+        "json.h": "c",
+        "socket.h": "c",
+        "sco.h": "c",
+        "rfcomm.h": "c"
     }
 }
