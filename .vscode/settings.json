@@ -3,6 +3,7 @@
         "json.h": "c",
         "socket.h": "c",
         "sco.h": "c",
-        "rfcomm.h": "c"
+        "rfcomm.h": "c",
+        "fcntl.h": "c"
     }
 }
