@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Linux headers
 #include <fcntl.h>  
@@ -9,10 +10,19 @@
 #include <termios.h>  
 #include <unistd.h>  
 
+#define MAXLINE 1024
+
 int size_message, number_packages, count_packages_received = 0;
 char  USB_port_number[20]; 
 int serial_port;
-int time;
+int travel_time;
+
+void initialize_port(USB_port_number, msg);
+
+void * timeout();
+pthread_t time_thread;
+pthread_mutex_t mutex_time_thread;
+int time_out = 0;
 
 int main(int argc, char *argv[]) {
   // Verifing args
@@ -34,34 +44,54 @@ int main(int argc, char *argv[]) {
   strcat(msg, argv[2]); 
 
   initialize_port(USB_port_number, msg);
+
+  	// Start thread to listen for server
+	if (pthread_mutex_init(&mutex_time_thread, NULL) != 0) {
+		perror("Failed to start mutex initialization");
+		exit(EXIT_FAILURE);
+	}
+ 
+	pthread_create(&time_thread, NULL, timeout, NULL);
+
+  
   
   //listen port
-  while (count_packages_received < number_packages)
+  while (count_packages_received < number_packages && !time_out)
   { 
-    char read_buf [256];
-    memset(&read_buf, '\0', sizeof(read_buf));
+    // pthread_mutex_lock(&mutex_time_thread);
+    // if (!time_out){
+      // pthread_mutex_unlock(&mutex_time_thread);
 
-    int num_bytes = read(serial_port, &read_buf, 4);
-    // printf("num_bytes %d\n", num_bytes);
-    
-    if (num_bytes < 0) {
-        printf("Error reading: %s", strerror(errno));
-        return 1;
-    }
+      char read_buf [256];
+      memset(&read_buf, '\0', sizeof(read_buf));
 
-    if(num_bytes > 0){ 
-      
-      printf("Received message: %s\n", read_buf);
-      count_packages_received++;
+      int num_bytes = read(serial_port, &read_buf, 4);
+      // printf("num_bytes %d\n", num_bytes);
 
-      time += atoi(read_buf);
-      // printf("time: %d\n", time);
-    }
+      if (num_bytes < 0) {
+          printf("Error reading: %s", strerror(errno));
+          return 1;
+      }
+
+      if(num_bytes > 0){ 
+
+        printf("\nReceived message: %s\n", read_buf);
+        count_packages_received++;
+
+        travel_time += atoi(read_buf);
+        // printf("time: %d\n", time);
+      }
+    // }
   }
-
-  int jitter = time / count_packages_received;
+  
+  int jitter = travel_time / count_packages_received;
   printf("jitter: %d\n", jitter);
 
+  int rate = abs((((float) count_packages_received/(float)number_packages)* 100)); 
+  printf("rate: %d\n", rate);
+
+  create_gnu_files(rate,jitter);
+  
   close(serial_port);
   return 0; // success
 }
@@ -115,4 +145,157 @@ void initialize_port(char  USB_port_number[20], char msg[10]){
 
   write(serial_port, msg, sizeof(msg));
 
+}
+
+void * timeout(){
+  printf( "timeout %d\n", time_out);
+  clock_t start_time;
+	clock_t end_t;
+	double seconds_elapsed = 0;
+	start_time = clock(); 
+	double timeout = number_packages * 1; //1 millisecond for every send message
+  
+  // Timeout wating
+  while ( seconds_elapsed < timeout * 3000) {
+		end_t = clock(); 
+		seconds_elapsed = (double)(end_t - start_time) / CLOCKS_PER_SEC * 1000; 
+		// printf( "[WAITING FOR %.0f Of %.0f MILISECONDS ]", seconds_elapsed, timeout * 3000);
+		// printf( "\r");
+	} 
+  
+  time_out = 1;
+  printf( "timeout %d\n", time_out); 
+
+}
+
+
+int print_to_file(char * filename, int data1, float data2)
+{
+  printf("print_to_file\n");
+   FILE * ou_file; 
+   
+   printf("filename %s\n",filename);
+   ou_file = fopen(filename, "a+");
+   
+   if ( !ou_file ) {
+      return 0;
+   }
+	
+	fprintf(ou_file,"%d\t%.2f\n", data1, data2);
+
+   return 1;
+}
+
+void create_gnu_files(float rate, float jitter){
+
+	// file_name: USB_port_number + number_packages + jitter.txt
+  printf("create_gnu_files\n");
+	char s_message[MAXLINE];
+
+	char * file_data_jitter_name[MAXLINE];
+
+	memset(&s_message, 0, sizeof(s_message)); 
+
+	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
+	strcat(file_data_jitter_name, "gnu_files/");
+	strcat(file_data_jitter_name, "Arduino_Lora");
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_jitter_name, s_message);
+	strcat(file_data_jitter_name, "_jitter");
+	strcat(file_data_jitter_name, ".txt");
+
+	print_to_file(file_data_jitter_name, size_message, jitter);
+
+
+	// file_name: USB_port_number + number_packages + jitter + gnu.txt
+	char * file_data_jitter_gnu_name[MAXLINE];
+
+	memset(&file_data_jitter_gnu_name, 0, sizeof(file_data_jitter_gnu_name)); 
+
+	strcat(file_data_jitter_gnu_name, "gnu_files/");
+	strcat(file_data_jitter_gnu_name, "Arduino_Lora");
+	strcat(file_data_jitter_gnu_name, s_message);
+	strcat(file_data_jitter_gnu_name, "_jitter");  
+	strcat(file_data_jitter_gnu_name, "_gnu");
+	strcat(file_data_jitter_gnu_name, ".txt"); 
+	
+	memset(&file_data_jitter_name, 0, sizeof(file_data_jitter_name)); 
+	
+	strcat(file_data_jitter_name, "gnu_files/");
+	strcat(file_data_jitter_name, "Arduino_Lora");
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_jitter_name, s_message);
+	strcat(file_data_jitter_name, "_jitter");
+
+	create_txt_file(file_data_jitter_gnu_name, file_data_jitter_name, "Jitter");
+
+	// file_name: USB_port_number + number_packages + rate.txt
+	char * file_data_rate_name[MAXLINE]; 
+
+	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
+
+	strcat(file_data_rate_name, "gnu_files/");
+	strcat(file_data_rate_name, "Arduino_Lora");
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_rate_name, s_message);
+	strcat(file_data_rate_name, "_rate");  
+	strcat(file_data_rate_name, ".txt"); 
+
+	print_to_file(file_data_rate_name, size_message, rate);
+
+	// file_name: USB_port_number + number_packages + jitrateter + gnu.txt
+	char * file_data_rate_gnu_name[MAXLINE];
+
+	memset(&file_data_rate_gnu_name, 0, sizeof(file_data_rate_gnu_name)); 
+
+	strcat(file_data_rate_gnu_name, "gnu_files/");
+	strcat(file_data_rate_gnu_name, "Arduino_Lora");
+	strcat(file_data_rate_gnu_name, s_message);
+	strcat(file_data_rate_gnu_name, "_rate");  
+	strcat(file_data_rate_gnu_name, "_gnu");
+	strcat(file_data_rate_gnu_name, ".txt"); 
+	
+	memset(&file_data_rate_name, 0, sizeof(file_data_rate_name)); 
+	
+	strcat(file_data_rate_name, "gnu_files/");
+	strcat(file_data_rate_name, "Arduino_Lora");
+	sprintf(s_message, "_%d", number_packages);
+	strcat(file_data_rate_name, s_message);
+	strcat(file_data_rate_name, "_rate");
+
+	create_txt_file(file_data_rate_gnu_name, file_data_rate_name,"Tasa de paquetes perdidos");
+
+}
+
+int create_txt_file(char * filename, char * file_data_name, char desctiption[MAXLINE])
+{
+  printf("create_txt_file\n");
+   FILE * ou_file; 
+   
+   ou_file = fopen(filename, "w");
+   
+   if ( !ou_file ) {
+      return 0;
+   }
+	
+	fprintf(ou_file,"#!/usr/local/bin/gnuplot -persist\n");
+	fprintf(ou_file,"set terminal postscript landscape noenhanced color \\\n");
+	fprintf(ou_file,"dashed defaultplex \"Helvetica\" 14\n");
+	fprintf(ou_file,"set output '%s_grafica.ps'\n", file_data_name);
+	fprintf(ou_file,"set xlabel \"Tamano del paquete UDP\" \n");
+	fprintf(ou_file,"set ylabel \"%s (%c) \" \n",desctiption, '%');
+	fprintf(ou_file,"set key left top\n");
+	fprintf(ou_file,"set title \"%s en funcion del tamano del buffer UDP\" \n", desctiption);
+	fprintf(ou_file,"#set xrange [ 0 : 130 ] noreverse nowriteback\n");
+	fprintf(ou_file,"#set yrange [ -.5 : 14 ] noreverse nowriteback\n");
+	fprintf(ou_file,"#set mxtics 5.000000\n");
+	fprintf(ou_file,"#set mytics 1.000000\n");
+	fprintf(ou_file,"#set xtics border mirror norotate 1\n");
+	fprintf(ou_file,"#set ytics border mirror norotate 0.5\n");
+	fprintf(ou_file,"plot \"%s.txt\" using 1:2 title \"%s\" w lp pt 5 pi -4 lt rgb \"violet\", \\\n", file_data_name, desctiption);
+	fprintf(ou_file,"#w linespoint\n");
+	fprintf(ou_file,"#    EOF\n");
+
+
+   return 1;
 }
