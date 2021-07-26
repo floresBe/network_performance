@@ -8,7 +8,6 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 #include <time.h>
-#include<json-c/json.h>
   
 #define PORT     6050 
 #define MAXLINE 1024 
@@ -51,18 +50,18 @@ int main() {
 	
 	while (1)
 	{
-		char message_json[MAXLINE];
-		memset(&message_json, 0, sizeof(message_json));   
-		n = recvfrom(sockfd, (char *)message_json, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
+		char message[MAXLINE];
+		memset(&message, 0, sizeof(message));   
+		n = recvfrom(sockfd, (char *)message, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
 		time_t server_in = time(NULL);
 
 		char current_time[MAXLINE];
 		struct tm *lt = localtime(&server_in);
 		strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 
-		printf("\nPackage received: %s Current time: %s \n", message_json, current_time);	
+		printf("\nPackage received: %s Current time: %s \n", message, current_time);	
 		
-		sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);
+		sendto(sockfd, (char *)message, MAXLINE, 0, (const struct sockaddr *) &cliaddr, len);
 	}
 
 	return 0;

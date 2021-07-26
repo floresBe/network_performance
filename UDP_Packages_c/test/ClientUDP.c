@@ -10,7 +10,6 @@
 #include <netinet/in.h> 
 #include <netdb.h>
 #include <time.h>
-#include<json-c/json.h>
   
 #define PORT     6050 
 #define MAXLINE 1024
@@ -89,10 +88,10 @@ void * listen_server(){
 	
 	while (1){
 
-		char *message_json[MAXLINE];
+		char *message[MAXLINE];
 		
-		memset(&message_json, 0, sizeof(message_json)); 
-		recvfrom(sockfd, (char *)message_json, MAXLINE ,MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
+		memset(&message, 0, sizeof(message)); 
+		recvfrom(sockfd, (char *)message, MAXLINE ,MSG_WAITALL, ( struct sockaddr *) &servaddr, &len); 
 		time_t time_in = time(NULL);
 		
 		char current_time[MAXLINE];
@@ -100,7 +99,7 @@ void * listen_server(){
     	strftime(current_time, sizeof(current_time), "%Y-%m-%d %H:%M:%S", lt);
 		
 		i_package++;
-		printf("\n\nPackage %d received: %s Current time: %s\n", i_package, message_json, current_time);	
+		printf("\n\nPackage %d received: %s Current time: %s\n", i_package, message, current_time);	
 	}
 }
  
