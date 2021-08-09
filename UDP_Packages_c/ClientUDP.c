@@ -280,8 +280,8 @@ void * listen_server(){
 
 		printf("time_travel %d\n", time_travel);
 		
-		(times)[i_package] = time_travel;
-		// printf("(times)[%d] = %d\n", i_package, (times)[i_package]);
+		(times)[i_package - 1] = time_travel;
+		//printf("(times)[%d] = %d\n", i_package, (times)[i_package-1]);
 
 		pthread_mutex_lock(&mutex_packages_received);
 		
@@ -297,9 +297,9 @@ float get_average(){
 
 	for (int i = 0; i < i_package - 1; i++)
 	{  
-		// printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
+		//printf("(times)[%d + 1] = %d,\n(times)[%d] = %d\n", i, (times)[i + 1], i, (times)[i]);
 		int difference = (times)[i + 1] - (times)[i]; 
-		// printf("difference: %d\n", difference);
+		//printf("difference: %d\n", difference);
 		avrg += (float) difference;
 	}
 	// printf("sum: %f\n", avrg);
