@@ -22,6 +22,8 @@ void setup() {
 
   // put the radio into receive mode
   LoRa.receive();
+
+  delay(1);
 }
 
 void loop() {
@@ -83,7 +85,7 @@ void loop() {
       }
 
       counter++;
-      delay(3000);
+      delay(1000);
       
    }
    

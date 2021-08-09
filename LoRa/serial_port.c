@@ -46,27 +46,26 @@ int main(int argc, char *argv[]) {
   initialize_port(USB_port_number, msg);
 
   	// Start thread to listen for server
-	if (pthread_mutex_init(&mutex_time_thread, NULL) != 0) {
-		perror("Failed to start mutex initialization");
-		exit(EXIT_FAILURE);
-	}
+	// if (pthread_mutex_init(&mutex_time_thread, NULL) != 0) {
+	// 	perror("Failed to start mutex initialization");
+	// 	exit(EXIT_FAILURE);
+	// }
  
 	pthread_create(&time_thread, NULL, timeout, NULL);
+  
+  sleep(2);
 
-  
-  
-  //listen port
+  printf("\nwrite port..\n");
+  write(serial_port, msg, sizeof(msg));
+
+  printf("\nlisten port..\n");
   while (count_packages_received < number_packages && !time_out)
-  { 
-    // pthread_mutex_lock(&mutex_time_thread);
-    // if (!time_out){
-      // pthread_mutex_unlock(&mutex_time_thread);
-
+  {  
       char read_buf [256];
       memset(&read_buf, '\0', sizeof(read_buf));
 
       int num_bytes = read(serial_port, &read_buf, 4);
-      // printf("num_bytes %d\n", num_bytes);
+      //printf("num_bytes %d\n", num_bytes);
 
       if (num_bytes < 0) {
           printf("Error reading: %s", strerror(errno));
@@ -81,11 +80,11 @@ int main(int argc, char *argv[]) {
         travel_time += atoi(read_buf);
         // printf("time: %d\n", time);
       }
-    // }
+    sleep(1);
   }
   
   int jitter = travel_time / count_packages_received;
-  printf("jitter: %d\n", jitter);
+  printf("\njitter: %d\n", jitter);
 
   int rate = abs((((float) count_packages_received/(float)number_packages)* 100)); 
   printf("rate: %d\n", rate);
@@ -97,8 +96,9 @@ int main(int argc, char *argv[]) {
 }
 
 void initialize_port(char  USB_port_number[20], char msg[10]){
-
+  
 // Open the serial port. Change device path as needed (currently set to an standard FTDI USB-UART cable type device)
+  printf("\ninitialize port..\n");
   serial_port = open(USB_port_number, O_RDWR);
 
   // Create new termios struc, we call it 'tty' for convention
@@ -110,28 +110,28 @@ void initialize_port(char  USB_port_number[20], char msg[10]){
       return;
   }
 
-  tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
-  tty.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
-  tty.c_cflag &= ~CSIZE; // Clear all bits that set the data size 
-  tty.c_cflag |= CS8; // 8 bits per byte (most common)
-  tty.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
-  tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+  // tty.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
+  // tty.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
+  // tty.c_cflag &= ~CSIZE; // Clear all bits that set the data size 
+  // tty.c_cflag |= CS8; // 8 bits per byte (most common)
+  // tty.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+  // tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
 
-  tty.c_lflag &= ~ICANON;
-  tty.c_lflag &= ~ECHO; // Disable echo
-  tty.c_lflag &= ~ECHOE; // Disable erasure
-  tty.c_lflag &= ~ECHONL; // Disable new-line echo
-  tty.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
-  tty.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
-  tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+  // tty.c_lflag &= ~ICANON;
+  // tty.c_lflag &= ~ECHO; // Disable echo
+  // tty.c_lflag &= ~ECHOE; // Disable erasure
+  // tty.c_lflag &= ~ECHONL; // Disable new-line echo
+  // tty.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
+  // tty.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
+  // tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
 
-  tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
-  tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
-  // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
-  // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
+  // tty.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+  // tty.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+  // // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
+  // // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
 
-  tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
-  tty.c_cc[VMIN] = 0;
+  // tty.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+  // tty.c_cc[VMIN] = 0;
 
   // Set in/out baud rate to be 9600
   cfsetispeed(&tty, B9600);
@@ -142,13 +142,13 @@ void initialize_port(char  USB_port_number[20], char msg[10]){
       printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
       return;
   }
-
-  write(serial_port, msg, sizeof(msg));
-
+  
+  
+  
 }
 
 void * timeout(){
-  printf( "timeout %d\n", time_out);
+  // printf( "timeout %d\n", time_out);
   clock_t start_time;
 	clock_t end_t;
 	double seconds_elapsed = 0;
@@ -164,17 +164,19 @@ void * timeout(){
 	} 
   
   time_out = 1;
-  printf( "timeout %d\n", time_out); 
+  // printf( "timeout %d\n", time_out); 
 
 }
 
 
+
+
 int print_to_file(char * filename, int data1, float data2)
 {
-  printf("print_to_file\n");
+  // printf("print_to_file\n");
    FILE * ou_file; 
    
-   printf("filename %s\n",filename);
+  //  printf("filename %s\n",filename);
    ou_file = fopen(filename, "a+");
    
    if ( !ou_file ) {
@@ -182,14 +184,14 @@ int print_to_file(char * filename, int data1, float data2)
    }
 	
 	fprintf(ou_file,"%d\t%.2f\n", data1, data2);
-
+  // fclose(filename);
    return 1;
 }
 
 void create_gnu_files(float rate, float jitter){
 
 	// file_name: USB_port_number + number_packages + jitter.txt
-  printf("create_gnu_files\n");
+  // printf("create_gnu_files\n");
 	char s_message[MAXLINE];
 
 	char * file_data_jitter_name[MAXLINE];
@@ -269,7 +271,7 @@ void create_gnu_files(float rate, float jitter){
 
 int create_txt_file(char * filename, char * file_data_name, char desctiption[MAXLINE])
 {
-  printf("create_txt_file\n");
+  // printf("create_txt_file\n");
    FILE * ou_file; 
    
    ou_file = fopen(filename, "w");
