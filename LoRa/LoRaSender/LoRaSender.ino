@@ -22,7 +22,12 @@ void setup() {
 
   // put the radio into receive mode
   LoRa.receive();
+<<<<<<< HEAD
   delay(100);
+=======
+
+  delay(1);
+>>>>>>> e775a6a5e4b8d3e0baf765659febd027048a147d
 }
 
 void loop() {

@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
 	size_message = atoi(argv[3]);
 	number_packages = atoi(argv[4]);
 
-	if(size_message < 8 || size_message > 20){
-		printf("size_message should be smaller than 20 and bigger than 8\n");
-		exit(1);
-	}
+	// if(size_message < 8 || size_message > 20){
+	// 	printf("size_message should be smaller than 20 and bigger than 8\n");
+	// 	exit(1);
+	// }
 
 	memset(&times, 0, sizeof(times)); 
 	if ( !create_array(&times, number_packages)) {
@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
 
 	//set Time Zone
 	setenv("TZ", "PST8PDT", 1); 
+	printf("set Time Zone\n");
 
     // Configure xbee
 	struct xbee *xbee = configure_xbee(xbee, ret, USB_port_number);
@@ -108,12 +109,13 @@ int main(int argc, char *argv[]) {
 		// Send data to the remote xbee 
 		send_data(xbee, con, ret); 
 		printf("package %d send\n\n", i);
+		sleep(0.5);
 	}
 
 	clock_t start_time;
 	clock_t end_t;
 	double seconds_elapsed = 0; 
-	double timeout = number_packages * 0.5; //500 millisecond for every send message
+	double timeout = number_packages * 0.05;
 	start_time = clock();  
 
 	// Timeout wating

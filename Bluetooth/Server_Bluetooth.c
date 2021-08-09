@@ -21,26 +21,32 @@ int main(int argc, char **argv)
     loc_addr.rc_channel = (uint8_t) 1;
     bind(s, (struct sockaddr *)&loc_addr, sizeof(loc_addr));
 
+    listen(s, 1);
+    printf("listenning\n");
+
+    client = accept(s, (struct sockaddr *)&rem_addr, &opt);
+    printf("accept\n");
+
+
    while (1)
    {
-        listen(s, 1);
-        printf("listenning\n");
-
-        client = accept(s, (struct sockaddr *)&rem_addr, &opt);
+       printf("while\n");
+       
     
         ba2str( &rem_addr.rc_bdaddr, buf);
         fprintf(stderr, "Accepted connection from %s\n", buf);
     
         memset(buf, 0, sizeof(buf));
         bytes_read = read(client, buf, sizeof(buf));
+        printf("read\n");
     
         if( bytes_read > 0 ) {
             printf("received [%s]\n", buf);
             callback_function(buf, client);
         }
-        close(client);
+       
    }
-    
+     close(client);
     close(s);
     return 0;
 }
