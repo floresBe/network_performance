@@ -1,8 +1,8 @@
 #!/usr/local/bin/gnuplot -persist
 set terminal postscript landscape noenhanced color \
 dashed defaultplex "Helvetica" 14
-set output 'gnu_files/aflores-Linux_64_rate_grafica.ps'
-set xlabel "Tamano del paquete UDP" 
+set output 'aflores-Linux_64_rate_grafica.ps'
+set xlabel "Tamano del paquete" 
 set ylabel "Tasa de paquetes perdidos (%) " 
 set key left top
 set title "Tasa de paquetes perdidos en funcion del tamano del buffer UDP" 
@@ -12,6 +12,6 @@ set title "Tasa de paquetes perdidos en funcion del tamano del buffer UDP"
 #set mytics 1.000000
 #set xtics border mirror norotate 1
 #set ytics border mirror norotate 0.5
-plot "gnu_files/aflores-Linux_64_rate.txt" using 1:2 title "Tasa de paquetes perdidos" w lp pt 5 pi -4 lt rgb "violet", \
+plot "aflores-Linux_64_rate.txt" using 1:2 title "Tasa de paquetes perdidos" w lp pt 5 pi -4 lt rgb "violet", \
 #w linespoint
 #    EOF
