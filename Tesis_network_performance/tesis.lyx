@@ -4,10 +4,15 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass article
+\textclass book
 \use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
 \maintain_unincluded_children false
-\language english
+\language spanish-mexico
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -57,9 +62,9 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 3cm
+\leftmargin 2cm
 \topmargin 1cm
-\rightmargin 4cm
+\rightmargin 3cm
 \bottommargin 2cm
 \secnumdepth 3
 \tocdepth 3
@@ -67,7 +72,7 @@
 \paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style english
+\quotes_style french
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -81,9 +86,7 @@
 
 \begin_body
 
-\begin_layout Part*
-
-\lang spanish-mexico
+\begin_layout Title
 \begin_inset ERT
 status open
 
@@ -99,144 +102,172 @@ thispagestyle{empty}
 Tecnologías de comunicación para aplicaciones del Internet de las Cosas.
 \end_layout
 
-\begin_layout Section
-
-\lang spanish-mexico
-Introducción 
+\begin_layout Date
+Enero 2022
 \end_layout
 
 \begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
 
-\lang spanish-mexico
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+Introducción
+\end_layout
+
+\begin_layout Standard
 El termino Industria 4.0 (I40) hace referencia a la cuarta evolución tecnológica
  por la que la industria esta pasando actualmente.
- Esta pretende, a traves de tecnologías como sistemas ciberfísicos (CPS
- - cyber physical systems)y el Internet de las cosas, crear una producción
- inteligente, descentralizada y autónoma con sistemas trabajando en tiempo
- real, con la finalidad de brindar al cliente un servicio lo mas personalizado
- posible.
- Los Sistemas Embebidos proporcionan la base para la creación de los CPS,
- los cuales a su vez se relacionan para crear un Internet de las Cosas,
- quien se combina con el Internet de los Servicios para hacer posible la
- I40.
- 46
+ Esta pretende, a través de tecnologías como sistemas ciberfísicos (CPS
+ - cyber physical systems) y el Internet de las cosas (IoT - Internet of
+ Things), crear una producción inteligente, descentralizada y autónoma con
+ sistemas trabajando en tiempo real, con la finalidad de brindar al cliente
+ un servicio lo mas personalizado posible.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "46"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
+Las aplicaciones IoT cumplen con la tarea de la recopilación y evaluación
+ integral de datos de diferentes fuentes (equipos y sistemas de producción,
+ así como sistemas de gestión), en el contexto de la I40, se convertirán
+ en estándares para soportar la toma de decisiones en tiempo real 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "53"
+literal "false"
 
-\lang spanish-mexico
-En este contexto, la recopilación y evaluación integral de datos de diferentes
- fuentes (equipos y sistemas de producción, así como sistemas de gestión)
- se convertirán en estándar para soportar la toma de decisiones en tiempo
- real 53.
+\end_inset
+
+.
  Ademas, con el aumento de la conectividad y el uso de protocolos de comunicacio
-nes estándar que vienen con la I40, la necesidad de proteger los sistemas
- industriales críticos y las líneas de fabricación de las amenazas, aumenta
- dramáticamente 53.
+nes estándar que vienen con ello, la necesidad de proteger los sistemas
+ industriales críticos y las líneas de fabricación de las amenazas aumenta
+ dramáticamente 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "53"
+literal "false"
+
+\end_inset
+
+.
  Por lo tanto, definir los estándares de comunicación mas eficientes, se
- vuelve algo fundamental al momento de querer construir un sistema CPS,
- ya que el núcleo computacional de un CPS es un sistema de tiempo-real estricto,
- es decir, que es absolutamente necesesario que produzca respuestas correctas
+ vuelve algo fundamental al momento de querer construir un sistema con estas
+ características.
+ Los CPS son una herramienta muy útil dentro de estas aplicaciones ya que
+ el núcleo computacional de un CPS es un sistema de tiempo-real estricto,
+ es decir, que es absolutamente necesario que produzca respuestas correctas
  dentro de un intervalo de tiempo definido, si el tiempo de respuesta excede
- ese límite, se produce un funcionamiento erróneo en el sistema.
- 47
+ ese límite, se produce un funcionamiento erróneo en el sistema 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "47"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
-La red de comunicaciones del CPS debe también debe ofrecer prestaciones
- de tiempo-real estricto.
- Tecnologías de red tales como Ethernet, WiFi, Bluetooth o ZigBee, utilizan
- protocolos con la política del mejor esfuerzo, ya que si bien ofrecen un
- muy buen rendimiento, no hay garantía del tiempo de entrega de los mensajes.
- Por otra parte, recientemente se han propuesto protocolos con prestaciones
- de tiempo-real estricto, tales como Real-Time Ethernet, WirelessHART o
- ISA 100, que en teoría son mas adecuados para ser utilizados en los CPS
- y en aplicaciones de la I40.
- Sin embargo, no existen estudios comparativos de su desempeño ni se ha
- experimentado que tan superiores son con respecto a los protocolos de redes
- de propósito general.
+La red de comunicaciones del CPS también debe ofrecer prestaciones de tiempo-rea
+l estricto.
+ Recientemente se han propuesto protocolos con prestaciones de tiempo-real
+ estricto, tales como Real-Time Ethernet, WirelessHART o ISA 100, que en
+ teoría son mas adecuados para ser utilizados en los CPS y en aplicaciones
+ IoT de la I40.
+ Sin embargo, no existen muchos estudios comparativos de su desempeño ni
+ se ha experimentado que tan superiores son con respecto a los protocolos
+ de redes de propósito general.
  Por otra parte, es importante conocer qué soporte existe para su uso en
- SCP, su facilidad de instalación, el soporte de bibliotecas para el desarrollo
- de aplicaciones, entre otros parámetros.
- 48
+ SCP (Secure Copy Protocol), su facilidad de instalación, el soporte de
+ bibliotecas para el desarrollo de aplicaciones, entre otros parámetros.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "48"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
-El desarrollo de este trabajo busca identificar cual es el protocolo de
- redes de computadoras más conveniente para el desarrollo de aplicaciones
- en el contexto de la I40, así como presentar resultado de un estudio comparativ
-o de los protocolos de red más importantes de la actualidad.
+El desarrollo de este trabajo busca presentar el resultado de un estudio
+ comparativo de los protocolos de red más importantes de la actualidad.
+ que pueden ser utilizados para el desarrollo de aplicaciones IoT en el
+ contexto de la I40.
 \end_layout
 
-\begin_layout Subsection
-
-\lang spanish-mexico
-Objetivos generales.
+\begin_layout Section
+Objetivos generales
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Evaluar los protocolos de redes de computadoras más importantes, para poder
- determinar cual el más conveniente para ser utilizado en el contexto de
- alguna aplicación específica de la Industria 4.0.
+ dar una visión mas amplia sobre las características de cada uno de estos
+ y evaluar si pueden ser utilizados en el contexto de alguna aplicación
+ del Internet de las Cosas.
 \end_layout
 
-\begin_layout Subsection
-
-\lang spanish-mexico
-Objetivos específicos.
- 
+\begin_layout Section
+Objetivos específicos
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Definir cuales son las características con las que debe cumplir un protocolo
- para que pueda ser utilizado en aplicaciones I04.
+ para que pueda ser utilizado en aplicaciones del Internet de las Cosas.
  
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Definir experimentos para determinar si los protocolos cumplen con las caracterí
 sticas definidas.
  
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Determinar y estudiar los protocolos a evaluar con los experimentos predefinidos.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
-Evaluar los protocolos elegidos para determinar sus caracteristicas y comprobar
- su funcionamiento dentro de a I40.
+Evaluar con ayuda de los experimentos, los protocolos elegidos para determinar
+ sus características y comprobar su funcionamiento dentro de una aplicación
+ del Internet de las Cosas.
  
 \end_layout
 
-\begin_layout Section
-
-\lang spanish-mexico
+\begin_layout Chapter
 Trabajos relacionados
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 \begin_inset Tabular
 <lyxtabular version="3" rows="5" columns="6">
 <features islongtable="true" longtabularalignment="center">
 <column alignment="left" valignment="top" width="10col%">
-<column alignment="left" valignment="top" width="12col%">
+<column alignment="left" valignment="top" width="14col%">
 <column alignment="left" valignment="top" width="17col%">
 <column alignment="left" valignment="top" width="16col%">
 <column alignment="left" valignment="top" width="17col%">
@@ -273,7 +304,7 @@ Objetivos
 \begin_inset Text
 
 \begin_layout Plain Layout
-Metodos
+Métodos
 \end_layout
 
 \end_inset
@@ -298,14 +329,20 @@ Datos relevantes
 </cell>
 </row>
 <row>
-<cell multicolumn="1" alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none" width="12col%">
+<cell multicolumn="1" alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none" width="14col%">
 \begin_inset Text
 
 \begin_layout Plain Layout
+Integración de ZigBee/6loWPAN en una red de sensores inalámbrica.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
 
-\lang spanish-mexico
-Integración de ZigBee/6loWPAN en una red de sensores inalabrica.
- [49]
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -368,10 +405,16 @@ Muestran especial interes en la dificultad que tiene el estandar 6LoWPAN
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\lang spanish-mexico
 A Comparison of WirelessHART and ZigBee for Industrial Applications.
- [50]
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "50"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -452,11 +495,17 @@ La comparación muestra que WirelessHART aborda muchas de las debilidades
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\lang spanish-mexico
 A Survey of ZigBee Wireless Sensor Network Technology: Topology, Applications
  and Challenges.
- [51]
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "51"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -524,10 +573,16 @@ Comparado con Wifi y Bluetooth, la pila del protocolo de ZigBee tiene un
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\lang spanish-mexico
 Bluetooth and Wi-Fi wireless protocols: A survey and a comparison.
- [52]
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "52"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -597,381 +652,600 @@ soporte a las transmisiones de tiempo real,
 
 \end_layout
 
-\begin_layout Section
-
-\lang spanish-mexico
+\begin_layout Chapter
 Protocolos de redes de computadoras para Internet de las Cosas
 \end_layout
 
-\begin_layout Subsection
-Wi-Fi.
- 
+\begin_layout Section
+Wi-Fi
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Descripción.
- 
+\begin_layout Subsection
+Descripción
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Wi-Fi o WLAN (redes de área local inalámbricas) es una red inalámbrica basada
  en una serie de especificaciones del Instituto de Ingenieros Eléctricos
  y Electrónicos (IEEE) denominada 802.11.
  Wi Fi utiliza radiofrecuencia sin licencia, principalmente en la banda
  de 2,4 GHz.
- Permite que una persona con una computadora o dispositivo movil con capacidad
+ Permite que una persona con una computadora o dispositivo móvil con capacidad
  inalámbrica se conecte a Internet a través de un punto de acceso inalámbrico.
  La región geográfica cubierta por uno o varios puntos de acceso se denomina
  zona activa.
  El Wi-Fi estaba destinado a ser utilizado para dispositivos móviles y redes
  de área local, pero ahora se utiliza a menudo para el acceso a Internet
- en exteriores.
- 1
+ en exteriores 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "1"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Historia.
- 
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 En el año de 1999, varias empresas (3Com, Airones, Intersil, Lucent Technologies
 , Nokia y Symbol Technologies) se unieron para conseguir formar una asociación
  sin fines de lucro a fin de mejorar la experiencia de usuario sin importar
  la marca de los dispositivos, utilizando una nueva tecnología de redes
  inalámbricas, por el año 2000 se le definió el término “Wi-Fi” para su
  trabajo técnico y anunció su nombre oficial como Wireless Ethernet Compatibilit
-y Alliance o WECA, pero a dia de hoy es llamada Wi-Fi Alliance.
- 2 A día de hoy la Wi-Fi Alliance está conformada por cientos de empresas
+y Alliance o WECA, pero al día de hoy es llamada Wi-Fi Alliance
+\begin_inset CommandInset citation
+LatexCommand cite
+key "2"
+literal "false"
+
+\end_inset
+
+.
+ A día de hoy la Wi-Fi Alliance está conformada por cientos de empresas
  en muchos países y poseen una visión común: “Conectar a todos y a todo”
  , por lo que se dedican a impulsar nuevas tecnologías y aplicaciones para
- el uso del Wi-Fi.
- 3
+ el uso del Wi-Fi 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "3"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Organismo que lo desarrolla o regula.
+\begin_layout Subsection
+Organismo que lo desarrolla o regula
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Wi-Fi Alliance, la cual es una organización que cumple con los estándares
- 802.11 establecidos por la IEEE.
- 4
+ 802.11 establecidos por la IEEE
+\begin_inset CommandInset citation
+LatexCommand cite
+key "4"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Principales características.
+\begin_layout Subsection
+Principales características
 \end_layout
 
-\begin_layout Standard
-
-\lang spanish-mexico
+\begin_layout Itemize
 El estándar 802.11n de la IEEE es casi sinónimo de Wi-Fi , mejora respecto
  a sus versiones anteriores, en la actualidad, la Wi-Fi Alliance decidió
  hacer lo mismo que bluetooth esté estándar se llama 802.15.1 oficialmente
  pero es mejor conocido como bluetooth, entonces sus nuevas versiones son
  bluetooth 5.0, ahora la Wi-Fi Alliance utilizara Wi-Fi 6 para 802.11ax, Wi-Fi
- 5 para 802.11ac y Wi-Fi 4 para el 802.11n.
- 5 “La norma 802.11 sigue el mismo modelo o arquitectura que toda la familia
+ 5 para 802.11ac y Wi-Fi 4 para el 802.11n 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "5"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+“La norma 802.11 sigue el mismo modelo o arquitectura que toda la familia
  802, es decir: capa física y capa enlace”, si se mira a mas detalle la
  subcapa inferior, PMD (Physical Media Dependent), que corresponde al conjunto
  de especificaciones de cada uno de los sistemas de transmisión a nivel
  físico, el estándar define cuatro: Infrarrojos, FHSS, DSSS y OFDM.
  La subcapa superior, PLCP (Physical Layer Convergence Procedure), se encarga
  de adaptar las diversas especificaciones de la subcapa PMD a la subcapa
- MAC, inmediatamente superior.
- 6 La velocidad máxima teórica del estándar 802.11ax es de 2.4 Gbps manteniendo
+ MAC, inmediatamente superior
+\begin_inset CommandInset citation
+LatexCommand cite
+key "6"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+La velocidad máxima teórica del estándar 802.11ax es de 2.4 Gbps manteniendo
  una frecuencia entre 2.4 y 5 GHz, alcance <100 metros.
- Estantandar en IoT: Wi-Fi Halow es una designación para productos que incorpora
-n la tecnología IEEE 802.11.ah.
+ Estándar en IoT: Wi-Fi Halow es una designación para productos que incorporan
+ la tecnología IEEE 802.11.ah.
  Mejora el Wi-Fi al trabajar en un espectro por debajo de 1GHz con más alcance
- y conectividad de bajo consumo energético ideal para dispositivos IoT.
- 7
+ y conectividad de bajo consumo energético ideal para dispositivos IoT
+\begin_inset CommandInset citation
+LatexCommand cite
+key "7"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-IMAGEN Modelo OSI y la Familia IEEE 802.11 
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-Modelo OSI y familia IEEE 802.11.jpg
+	scale 25
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Modelo OSI y la familia IEEE 802.11
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Topologías
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
-IMAGEN Resumen del protocolo Wi-Fi IEEE 802.11
-\end_layout
-
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Topologías.
- 
-\end_layout
-
-\begin_layout Standard
-
-\lang spanish-mexico
 Toda red inalámbrica compleja está compuesta por la combinación de una o
  más tipos de conexiones: 
 \end_layout
 
 \begin_layout Itemize
+Punto a punto
+\begin_inset CommandInset citation
+LatexCommand cite
+key "8"
+literal "false"
 
-\lang spanish-mexico
-Punto a punto 
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Punto a multipunto 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "8"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
+Multipunto a multipunto
+\begin_inset CommandInset citation
+LatexCommand cite
+key "8"
+literal "false"
 
-\lang spanish-mexico
-Multipunto a multipunto.
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Las redes inalámbricas WiFi contempla tres topologías o configuraciones
  distintas:
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Modo infraestructura o BSS: “Contrario al modo ad hoc donde no hay un elemento
  central, en el modo de infraestructura hay un elemento de “coordinación”:
- un punto de acceso o estación base.” 8 
+ un punto de acceso o estación base
+\begin_inset CommandInset citation
+LatexCommand cite
+key "8"
+literal "false"
+
+\end_inset
+
+.” 
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Modo ad hoc o IBSS: “También conocido como punto a punto, es un método para
  que los clientes inalámbricos puedan establecer una comunicación directa
- entre sí.” 8 
+ entre sí 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "8"
+literal "false"
+
+\end_inset
+
+.” 
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Modo ESS: “Se trata de un conjunto de BSS conectados mediante un sistema
  de distribución.
  Los puntos de acceso se comunican entre sí para permitir que las estaciones
  puedan pasar de un BSS a otro sin perder la comunicación, servicio denominado
- roaming.” 9
-\end_layout
+ roaming
+\begin_inset CommandInset citation
+LatexCommand cite
+key "9"
+literal "false"
 
-\begin_layout Subsubsection
+\end_inset
 
-\lang spanish-mexico
-Bibliotecas para el desarrollo de aplicaciones.
-\end_layout
-
-\begin_layout Itemize
-
-\lang spanish-mexico
-Biblioteca Wifi para arduino: Para que una placa arduino se conecte a internet
- tiene que hacer uso de un elemento llamado "Arduino WiFi Shield" y para
- manipularlo se hace uso de la WiFi Library("#include <WiFi.h>").
- 10
-\end_layout
-
-\begin_layout Itemize
-
-\lang spanish-mexico
-WifiManager: es una clase que provee la principal API para manejar todos
- los aspectos relacionados la conectividad WiFi con java.
- 11 
-\end_layout
-
-\begin_layout Itemize
-
-\lang spanish-mexico
-Python-wifi: Es un módulo de python que proporciona acceso de lectura y
- escritura a las capacidades de una tarjeta de red inalámbrica usando las
- extensiones inalámbricas de linux, para implementarlo utilice “pip instalar
- python-wifi”.
- 12
-\end_layout
-
-\begin_layout Itemize
-
-\lang spanish-mexico
-WifiUtils: es una biblioteca que proporciona un conjunto de métodos convenientes
- para administrar el estado de WiFi, el escaneo de WiFi y la conexión de
- WiFi a puntos de acceso.
- 13
+.” 
 \end_layout
 
 \begin_layout Subsection
+Bibliotecas para el desarrollo de aplicaciones
+\end_layout
 
-\lang spanish-mexico
+\begin_layout Itemize
+Biblioteca Wifi para arduino: Para que una placa arduino se conecte a internet
+ tiene que hacer uso de un elemento llamado "Arduino WiFi Shield" y para
+ manipularlo se hace uso de la WiFi Library("#include <WiFi.h>")
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+WifiManager: es una clase que provee la principal API para manejar todos
+ los aspectos relacionados la conectividad WiFi con java
+\begin_inset CommandInset citation
+LatexCommand cite
+key "11"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Python-wifi: Es un módulo de python que proporciona acceso de lectura y
+ escritura a las capacidades de una tarjeta de red inalámbrica usando las
+ extensiones inalámbricas de linux, para implementarlo utilice “pip instalar
+ python-wifi
+\begin_inset CommandInset citation
+LatexCommand cite
+key "12"
+literal "false"
+
+\end_inset
+
+”.
+ 
+\end_layout
+
+\begin_layout Itemize
+WifiUtils: es una biblioteca que proporciona un conjunto de métodos convenientes
+ para administrar el estado de WiFi, el escaneo de WiFi y la conexión de
+ WiFi a puntos de acceso
+\begin_inset CommandInset citation
+LatexCommand cite
+key "13"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
 Bluetooth 
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Descripción.
+\begin_layout Subsection
+Descripción
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 “Bluetooth es una especificación industrial para redes inalámbricas de área
  personal que posibilita la transmisión de voz y datos entre diferentes
- dispositivos mediante un enlace por radiofrecuencia.” 14
+ dispositivos mediante un enlace por radiofrecuencia
+\begin_inset CommandInset citation
+LatexCommand cite
+key "14"
+literal "false"
+
+\end_inset
+
+.”
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-2.1 Historia.
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Bluetooth fue nombrado en homenaje al rey danés Harald Blatand (Harold Bluetooth
  en inglés) conocido por ser un gran comunicador y por haber unificado los
  pueblos de Dinamarca, Noruega y Suiza.
  Bluetooth fue creado con la intención de comunicar dos tecnologías diferentes,
  los ordenadores y los teléfonos móviles.
  A comienzos del año 2000 el Bluetooth SIG lanzó el logo como la fusión
- de dos letras del alfabeto rúnico,hagall y berkana que representan la H
- y la B, las iniciales del rey, lo que da como resultado su característico
+ de dos letras del alfabeto rúnico, hagall y berkana que representan la
+ H y la B, las iniciales del rey, lo que da como resultado su característico
  logo.
- 14 En el año de 1994 Ericsson tenía la necesidad de una conexión entre
- dispositivos, con una interfaz vía radio y de bajos recursos, se llegó
- a un sistema basado en la comunicación por radio de corto alcance, llamado
- Mclink, en el año 1998 nació el Bluetooth Special Interest Group(SIG),
- promovido por las empresas Ericsson, Nokia, Toshiba, IBM e Intel, al agrupar
- las empresas líderes de las comunicaciones se llegó al éxito del Bluetooth.
- 14
+ En el año de 1994 Ericsson tenía la necesidad de una conexión entre dispositivo
+s, con una interfaz vía radio y de bajos recursos, se llegó a un sistema
+ basado en la comunicación por radio de corto alcance, llamado Mclink, en
+ el año 1998 nació el Bluetooth Special Interest Group(SIG), promovido por
+ las empresas Ericsson, Nokia, Toshiba, IBM e Intel, al agrupar las empresas
+ líderes de las comunicaciones se llegó al éxito del Bluetooth
+\begin_inset CommandInset citation
+LatexCommand cite
+key "14"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Organismo que lo desarrolla o regula.
+\begin_layout Subsection
+Organismo que lo desarrolla o regula
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Bluetooth Special Interest Group (SIG) es quien regula Bluetooth, en la
  actualidad SIG está conformado por más de 36000 empresas que buscan unificar,
  armonizar e impulsar la innovación en el vasto rango de dispositivos conectados
- que nos rodean.
- 15
+ que nos rodean
+\begin_inset CommandInset citation
+LatexCommand cite
+key "15"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Principales características.
+\begin_layout Subsection
+Principales características
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 La siguiente figura muestra un diagrama de la pila de protocolos de Bluetooth.
  La pila o stack se compone de protocolos específicos de Bluetooth como
  tecnología inalámbrica, así como del protocolo de búsqueda de servicios
  SDP, u otros protocolos adoptados como el protocolo de intercambio de objetos
- OBEX.
- 16
+ OBEX
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-IMAGEN
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Pila de protocolos de Bluetooth.jpg
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pila de protocolos de Bluetooth
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 El protocolo de gestión del enlace LMP se responsabiliza del establecimiento
- y configuración del enlace entre los dispositivos.
+ y configuración del enlace entre los dispositivos
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 La HCI proporciona una interfaz con el módulo radio, el controlador de la
- banda base y el gestor de enlace.
+ banda base y el gestor de enlace
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 El protocolo de control del enlace lógico y adaptación L2CAP abstrae a las
- capas superiores de los detalles de los protocolos de capas inferiores.
+ capas superiores de los detalles de los protocolos de capas inferiores
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 SDP proporciona a las aplicaciones un medio para realizar búsquedas de servicios
- y de sus características.
+ y de sus características
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 RFCOMM ofrece una emulación de un puerto serie sobre L2CAP proporcionando
  el mecanismo de transporte a servicios de capas más altas, permitiendo
- realizar múltiples conexiones con un dispositivo al mismo tiempo.
+ realizar múltiples conexiones con un dispositivo al mismo tiempo
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 La especificación del protocolo de control telefónico, TCS binary, define
  la señalización de control de llamadas para el establecimiento de llamadas
- de voz y datos entre dispositivos Bluetooth.
- 16
+ de voz y datos entre dispositivos Bluetooth
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-IMAGEN Comparativa del modelo osi y los protocolos de Bluetooth.
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Comparativa OSI Bluetooth.jpg
+	scale 25
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Plain Layout
+\begin_inset Caption Standard
 
-\lang spanish-mexico
-Topologías.
- 
+\begin_layout Plain Layout
+Comparativa del modelo OSI y los protocolos de Bluetooth
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Topologías
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 La topología de las redes Bluetooth puede ser punto-a-punto o punto-a multipunto.
  Los dispositivos, se comunican en redes denominadas piconets.
  Estas redes tienen posibilidad de crecer hasta tener 8 conexiones punto
@@ -981,610 +1255,1260 @@ La topología de las redes Bluetooth puede ser punto-a-punto o punto-a multipunt
  piconets diferentes, se conectan.
  En una piconet, un dispositivo debe actuar como master, enviando la información
  del reloj (para sincronizarse) y la información de los saltos de frecuencia.
- El resto de los dispositivos actúan como slaves (esclavos).
- 16
+ El resto de los dispositivos actúan como slaves (esclavos), los cuales
+ son dispositivos que pueden participar en mas de una red, cuando un dispositivo
+ no esta conectado a ninguna red, se le dice que su estado es Stand by,
+ ya que se encuentra en espera de conectarse a alguna, si un dispositivo
+ esta conectado a la red, pero no esta transmitiendo datos, se dice que
+ su estado es hold.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "16"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-Topologia bluetooth.jpg
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Topología Bluetooth
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Bibliotecas para el desarrollo de aplicaciones
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Bluez: Se trata de una biblioteca que se utiliza para emitir comandos y
- escuchar eventos de los controladores bluetooth para linux.
- 17 
+ escuchar eventos de los controladores bluetooth para linux
+\begin_inset CommandInset citation
+LatexCommand cite
+key "17"
+literal "false"
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Node-bluetooth: Es una biblioteca que permite la comunicación de puerto
  serial bluetooth para Node.js, funciona en Linux y se necesita tener libbluetoot
 h-dev (En Ubuntu/Debian: "$ sudo apt-get install libbluetooth-dev") para
  instalar node-bluetooth use la siguiente instrucción: "$ npm install node-bluet
-ooth --save".
- 18 
+ooth --save"
+\begin_inset CommandInset citation
+LatexCommand cite
+key "18"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 BluetoothManager: Es una biblioteca que facilita el uso de bluetooth en
- las aplicaciones de windows 10.
- 19 
+ las aplicaciones de windows 10
+\begin_inset CommandInset citation
+LatexCommand cite
+key "19"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Android.bluetooth: La plataforma de android incluye compatibilidad con la
  pila de red Bluetooth, la cual permite que un dispositivo intercambie datos
- de manera inalámbrica con otros dispositivos Bluetooth.
- 20
+ de manera inalámbrica con otros dispositivos Bluetooth
+\begin_inset CommandInset citation
+LatexCommand cite
+key "20"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsection
-
-\lang spanish-mexico
+\begin_layout Section
 ZigBee 
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Descripción.
+\begin_layout Subsection
+Descripción
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Zigbee es un estándar de comunicaciones inalámbricas diseñado por la Zigbee
  Alliance.
- Es un conjunto estandarizado de soluciones que pueden ser implementadas
- por cualquier fabricante, está basado en el estándar IEEE 802.15.4 de redes
- inalámbricas de área personal (Wireless Personal Area Network, WPAN) y
- tiene como objetivo las aplicaciones que requieren comunicaciones seguras
- con baja tasa de envío de datos y maximización de la vida útil de sus baterías.
- 21
+ Es un conjunto de protocolos de comunicación para el intercambio de datos
+ inalámbricos entre dispositivos de bajo coste, bajo consumo y baja tasa
+ de datos.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Historia.
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 La idea de las redes de familia Zigbee fue concebida en el año 1998 donde
  quedó claro que Wi-Fi y Bluetooth no cubrirán todos los contextos, bajo
  la necesidad de redes descentralizadas.
  En el 2003 se aprobó el estándar de la IEEE 802.15.4 , por lo cual Zigbee
  Alliance alcanzó sus objetivos, y actualmente colabora para crear y desarrollar
- estándares abiertos para los dispositivos que utilizamos dia a dia.
+ estándares abiertos para los dispositivos que utilizamos día a día.
  También aporta soluciones abiertas de internet de las cosas, principalmente
- en la domótica.
- 22 3.2 Organismo que lo desarrolla o regula: Zigbee fue desarrollado por
- Zigbee Alliance y actualmente es quien lo regula, fue establecida en el
- 2002.
- 23
+ en la domótica
+\begin_inset CommandInset citation
+LatexCommand cite
+key "22"
+literal "false"
+
+\end_inset
+
+.
+ 3.2 Organismo que lo desarrolla o regula: Zigbee fue desarrollado por Zigbee
+ Alliance y actualmente es quien lo regula, fue establecida en el 2002
+\begin_inset CommandInset citation
+LatexCommand cite
+key "23"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Principales características.
+\begin_layout Subsection
+Principales características
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Zigbee es un sistema ideal para redes domóticas, está diseñado para reemplazar
  la proliferación de sensores individuales, cubre las necesidades del mercado
- a un bajo costo, bajo consumo y de manera muy segura.
- 
+ a un bajo costo, bajo consumo y de manera muy segura
+\begin_inset CommandInset citation
+LatexCommand cite
+key "24"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-IMAGEN Pila de protocolos IEEE 802.5.4
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-Protocolo ZigBee.jpg
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Pila de protocolos IEEE 802.5.4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 Está basado en el estándar IEEE 802.15.4 de redes inalámbricas, define el
  nivel físico y el control de acceso al medio de redes inalámbricas de área
  personal con tasas bajas de transmisión de datos.
  Opera en la banda libre de ISM 2.4 GHz para conexiones inalámbricas con
  un alojamiento de 16 bits a 64 bits de dirección extendida y 128-bit AES
  de cifrado por lo cual provee conexiones seguras entre dispositivos, además,
- su alcance es de 10 m a 75m.
- 24
+ su alcance es de 10 m a 75m
+\begin_inset CommandInset citation
+LatexCommand cite
+key "24"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
+Topologías
+\end_layout
 
-\lang spanish-mexico
-Topologías.
+\begin_layout Standard
+Zigbee permite tres topologías de red: 
+\end_layout
+
+\begin_layout Itemize
+Topología de estrella: El coordinador se sitúa en el centro.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
+Topología en árbol: El coordinador será la raíz del árbol.
+ 
+\end_layout
 
-\lang spanish-mexico
-Zigbee permite tres topologías de red: Topología de estrella: El coordinador
- se sitúa en el centro.
- Topología en árbol: El coordinador será la raíz del árbol.
- Topología de malla: Al menos uno de los nodos tendrá más de dos conexiones.
+\begin_layout Itemize
+Topología de malla: Al menos uno de los nodos tendrá más de dos conexiones.
  Hasta 65.000 nodos en una red (Las limitaciones físicas no permiten tantos
  nodos, por ej.
- ancho de banda o memoria.) 25
+ ancho de banda o memoria)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "25"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-IMAGEN
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-Topologías zigbee (1).jpg
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Topologías ZigBee
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 La topología más interesante es la de malla, la cual permite que si, en
  un momento dado, un nodo del camino falla y se cae, pueda seguir la comunicació
-n entre todos los demás nodos debido a que se rehacen todos los caminos.
- 25
+n entre todos los demás nodos debido a que se rehacen todos los caminos
+\begin_inset CommandInset citation
+LatexCommand cite
+key "25"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
+\begin_layout Subsection
 Bibliotecas para el desarrollo de aplicaciones
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Una biblioteca de .Net Multiplataforma para la comunicación entre dispositivos
  Zigbee es: ZigBeeNet, debido a que Zigbee es solo una especificación, necesita
  una pila de un fabricante que la implemente.
  ZigBeeNet se desarrolla con una separación estricta de Zigbee Cluster Library
  (ZCL) y las distintas pilas de fabricantes.
- Por eso, es posible utilizar hardware diferente para su solución Zigbee.
- 26
+ Por eso, es posible utilizar hardware diferente para su solución Zigbee
+\begin_inset CommandInset citation
+LatexCommand cite
+key "26"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Para aplicaciones con C#: XBee C# Library es una API desarrollada en C #
  que le permite interactuar con los módulos de radiofrecuencia (RF), ofrecida
  por Digi International, empresa que ofrece soluciones para IoT.
  Posee dos módulos, XBeeLibrary.Core, contiene el código común para cualquier
  plataforma y XBeeLibrary.Xamarin, la cual contiene las API´s necesarias
  para desarrollar aplicaciones móviles multiplataforma en Xamarin para comunicar
-se con dispositivos Xbee sobre Bluetooth de baja energía.
- 27
+se con dispositivos Xbee sobre Bluetooth de baja energía
+\begin_inset CommandInset citation
+LatexCommand cite
+key "27"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 XBee Java Library: APi desarrollada en java que permite interactuar con
  los módulos de radiofrecuencia XBee de Digi International, también existe
  una biblioteca llamada XBee Android ofrecida igualmente por Digi International
  basada en XBee Java library, la cual hace énfasis en el desarrollo de aplicacio
 nes móviles para android, de igual manera ofrece soporte para diferentes
- interfaces de comunicación con dispositivos XBee por Bluetooh, usb o por
- el puerto serial.
- 28
+ interfaces de comunicación con dispositivos XBee por Bluetooth, usb o por
+ el puerto serial
+\begin_inset CommandInset citation
+LatexCommand cite
+key "28"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 XBee Python: Esta es una biblioteca para python, la cual utiliza el módulo
  PySerial para comunicarse con los módulos de radio, también utiliza el
  módulo SRP para una autenticación entre dispositivos a través de Bluetooth
  de baja energía, ambos módulos se descargan de manera autónoma al instalar
- la biblioteca mediante: “pip install digi-xbee”.
- 29
+ la biblioteca mediante: “pip install digi-xbee”
+\begin_inset CommandInset citation
+LatexCommand cite
+key "29"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsection
-
-\lang spanish-mexico
+\begin_layout Section
 LoRa 
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Descripción.
- 
+\begin_layout Subsection
+Descripción
 \end_layout
 
 \begin_layout Standard
+LoRa es una tecnología inalámbrica que emplea un tipo de modulación en radiofrec
+uencia patentado por Semtech, utiliza la tecnología de modulación se denomina
+ Chirp Spread Spectrum (o CSS) y se emplea en comunicaciones militares y
+ espaciales desde hace décadas
+\begin_inset CommandInset citation
+LatexCommand cite
+key "30"
+literal "false"
 
-\lang spanish-mexico
-LoRa es una tecnología inalámbrica (al igual que WiFi, Bluetooth o Zigbee)
- que emplea un tipo de modulación en radiofrecuencia patentado por Semtech,
- utiliza la tecnología de modulación se denomina Chirp Spread Spectrum (o
- CSS) y se emplea en comunicaciones militares y espaciales desde hace décadas.
- 30
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Historia.
- 
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
-LoRa (significa Long Range) es una tecnica de modulacion de red de área
+LoRa (significa Long Range) es una técnica de modulación de red de área
  amplia de baja potencia, se basa en técnicas de modulación de espectro
- y fue desarrollada por Semtech, proveedor de semiconductores analogicos,
+ y fue desarrollada por Semtech, proveedor de semiconductores analógicos,
  de señal mixta y algoritmos avanzados para consumidores de informática
  empresarial.
- Hoy en dia, LoRa es administrado por LoRa Alliance quien es una organización
+ Hoy en día, LoRa es administrado por LoRa Alliance quien es una organización
  creada en el 2015 para admitir el protocolo LoRaWAN y garantizar la interoperab
 ilidad de los productos que utilizaban esta tecnología, actualmente posee
  más de 500 miembros, entre ellos IBM, Cisco y Semtech.
- 30
+\begin_inset CommandInset citation
+LatexCommand cite
+key "30"
+literal "false"
+
+\end_inset
+
+ 
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Organismo que lo desarrolla o regula.
+\begin_layout Subsection
+Organismo que lo desarrolla o regula
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 En la actualidad LoRa está administrada por la LoRa Alliance, quien certifica
  a todo fabricante de hardware que desee trabajar con esta tecnología.
  LoRa Alliance es una organización sin fines de lucro que se a convertido
  en una de las más grandes alianzas del sector tecnológico, comprometida
  a permitir el despliegue a gran escala con un bajo nivel energético en
  redes de área amplia (LPWAN) IO a través del desarrollo y la promoción
- de LoRaWAN.
- 31
+ de LoRaWAN
+\begin_inset CommandInset citation
+LatexCommand cite
+key "31"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Principales características.
+\begin_layout Subsection
+Principales características
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 LoRaWAN es un protocolo de red que usa la tecnología LoRa, para redes de
  baja potencia y área amplia, LPWAN (Low Power Wide Area Network) empleado
  para comunicar y administrar dispositivos LoRa.
- El protocolo LoRaWAN se compone de gateways y nodos: gateways (antenas):
- son los encargados de recibir y enviar información a los nodos.
- nodos (dispositivos): son los dispositivos finales que envían y reciben
- información hacia el gateway.
- 32
+ El protocolo LoRaWAN se compone de gateways y nodos: 
 \end_layout
 
-\begin_layout Standard
-
-\lang spanish-mexico
-LoRa posee una alta tolerancia a las interferencias, alta sensibilidad para
- recibir datos (-168dB), es basada modulación “chirp” y su bajo consumo
- energético rinde hasta 10 años con una sola batería.
- Alcance de 10 a 20 km Baja transferencia de datos (hasta 255 bytes) Conexión
- punto a punto Frecuencias de trabajo: 868 Mhz en Europa, 915 Mhz en América,
- y 433 Mhz en Asia.
- LoRa es una tecnología ideal para conexiones a grandes distancias y para
- redes de IoT en las que se necesitan sensores que no dispongan de corriente
- eléctrica de red, teniendo grandes aplicaciones: Para Smart Cities (ciudades
- inteligentes) Lugares con poca cobertura (cómo explotaciones agrícolas
- o ganaderas en el campo) Para construir redes privadas de sensores y/o
- actuadores.
- 32 
-\end_layout
-
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Topologías.
+\begin_layout Itemize
+Gateways (antenas): son los encargados de recibir y enviar información a
+ los nodos.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
+Nodos (dispositivos): son los dispositivos finales que envían y reciben
+ información hacia el gateway
+\begin_inset CommandInset citation
+LatexCommand cite
+key "32"
+literal "false"
 
-\lang spanish-mexico
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+LoRa posee una alta tolerancia a las interferencias, alta sensibilidad para
+ recibir datos (-168dB), es basada modulación “chirp” y su bajo consumo
+ energético rinde hasta 10 años con una sola batería.
+ 
+\end_layout
+
+\begin_layout Itemize
+Alcance de 10 a 20 km.
+ 
+\end_layout
+
+\begin_layout Itemize
+Baja transferencia de datos (hasta 255 bytes).
+\end_layout
+
+\begin_layout Itemize
+Conexión punto a punto.
+\end_layout
+
+\begin_layout Itemize
+Frecuencias de trabajo: 868 Mhz en Europa, 915 Mhz en América, y 433 Mhz
+ en Asia.
+\end_layout
+
+\begin_layout Standard
+LoRa es una tecnología ideal para conexiones a grandes distancias y para
+ redes de IoT en las que se necesitan sensores que no dispongan de corriente
+ eléctrica de red, teniendo grandes aplicaciones: 
+\end_layout
+
+\begin_layout Itemize
+Para Smart Cities (ciudades inteligentes)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "32"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Lugares con poca cobertura (cómo explotaciones agrícolas o ganaderas en
+ el campo)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "32"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Para construir redes privadas de sensores y/o actuadores
+\begin_inset CommandInset citation
+LatexCommand cite
+key "32"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Topologías
+\end_layout
+
+\begin_layout Standard
 Permite la interconexión entre objetos inteligentes sin la necesidad de
  instalaciones locales complejas, y además otorga amplia libertad de uso
  al usuario final, al desarrollador y a las empresas que quieran instalar
- su propia red para Internet de las Cosas (IoT).
- 32 
+ su propia red para Internet de las Cosas (IoT)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "32"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-Bibliotecas para el desarrollo de aplicaciones.
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-LoRa (1).jpg
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Topología LoRa
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bibliotecas para el desarrollo de aplicaciones
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 Arduino-LoRa: Una biblioteca Arduino para enviar y recibir datos usando
  radios LoRa.
- Admite placas / shields basados en Semtech SX1276 /77/78/79.
- 33
+ Admite placas / shields basados en Semtech SX1276 /77/78/79
+\begin_inset CommandInset citation
+LatexCommand cite
+key "33"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 pyLoRa: es una adaptación y una versión mejorada del trabajo mayeranalytic
  original (mayeranalytics / pySX127x) pyLoRa se puede usar para comunicarse
  con Arduino a través de la biblioteca RADIOHEAD, la cual es una biblioteca
  orientada a objetos para enviar y recibir mensajes empaquetados a través
  de una variedad de radios de datos comunes y otros transportes en una variedad
- de microprocesadores integrados.
- 34
+ de microprocesadores integrados
+\begin_inset CommandInset citation
+LatexCommand cite
+key "34"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 ESP32_LoRaWAN: Proporciona una implementación de LoRaWAN Clase A y Clase
  C bastante completa, este es un puerto de la biblioteca LoRaWAN del nodo
  LoRaMac de Semtech para el ESP32 y solo se puede utilizar para productos
- Heltec ESP32 LoRa (Se requiere licencia para su uso).
- 35
+ Heltec ESP32 LoRa (Se requiere licencia para su uso)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "35"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+6LoWPAN 
 \end_layout
 
 \begin_layout Subsection
-
-\lang spanish-mexico
-LoWPAN 
+Descripción
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+6LoWPAN es un conjunto de estándares definidos por Internet Engineering
+ Task Force (IETF), que construye y sostiene todo el trabajo y los estándares
+ básicos de la arquitectura de Internet.
+ Los estándares de 6LoWPAN hacen posible la utilización eficiente e ingeniosa
+ de IPv6 sobre baja potencia, la baja velocidad de redes inalámbricas en
+ dispositivos integrados simples a través de una capa de adaptación y la
+ optimización de protocolos relacionados
+\begin_inset CommandInset citation
+LatexCommand cite
+key "36"
+literal "false"
 
-\lang spanish-mexico
-Descripción.
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
-Un LoWPAN es una red de comunicación simple de bajo costo que permite conectivid
-ad inalámbrica en aplicaciones con energía limitada y relajada.
- Un LoWPAN generalmente incluye dispositivos que trabajan juntos para conectar
- el entorno físico con el mundo real, por ejemplo, sensores inalámbricos.
- 6LoWPAN es un estándar que posibilita el uso de IPv6 sobre redes basadas
- en el estándar IEEE 802.15.4.
- 36
-\end_layout
-
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Historia,
+En la siguiente imagen se puede ver que 6loWPAN se encuentra entre las capas
+ de enlace y red, pudiendo llegar hasta a la capa de transporte.
+ 
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-El grupo de trabajo IETF 6LoWPAN se inició oficialmente en 2005, aunque
- la historia de la propiedad intelectual integrada se remonta más atrás.
- Las primeras especificaciones de 6LoWPAN se publicaron en 2007, primero
- con un RFC informativo [RFC4919] que especifica los requisitos y objetivos
- subyacentes de la estandarización inicial, y luego con un RFC de seguimiento
- estándar [RFC4944] que especifica el formato y la funcionalidad de 6LoWPAN.
- 37 En 2008 se formó un nuevo grupo de trabajo IETF, este especifica los
- requisitos y las soluciones de enrutamiento para redes inalámbricas, poco
- fiables y de bajo consumo.
- En 2008, ISA comenzó a estandarizar un sistema de automatización industrial
- inalámbrico llamado SP100.11a (también conocido como ISA100), que se basa
- en 6LoWPAN.
- Aún por el 2008 la IP500 Alliance, comenzó a desarrollar una recomendación
- para 6LowPAN sobre IEEE 802.15.4 En 2009 Zigbee Alliance anunció que comenzará
- a integrar estándares IETF como 6LowPAN en sus especificaciones futuras.
- 37
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-6LowPAN- (1).jpg
+	scale 35
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+6LoWPAN
 \end_layout
 
-\begin_layout Subsubsection
+\end_inset
 
-\lang spanish-mexico
-Organismo que lo desarrolla o regula.
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
+El grupo de trabajo IETF 6LoWPAN fue legítimamente fundada en 2005, a pesar
+ de que la historia del Protocolo de Internet integrado se remonta más atrás.
+ Durante toda la década de 1990 se presuponía que la ley de Moore progresaría
+ en la computación y competencia de comunicación tan rápidamente que en
+ muy poco tiempo cualquier dispositivo integrado puede posiblemente poner
+ en práctica los protocolos IP.
+ Aunque hasta cierto punto es cierto, y la Internet de las cosas ha madurado
+ rápidamente, no se aferraron a las tecnologías de radio inalámbricas baratas
+ y de bajo consumo y microcontroladores de baja potencia
+\begin_inset CommandInset citation
+LatexCommand cite
+key "37"
+literal "false"
 
-\lang spanish-mexico
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Organismo que lo desarrolla o regula
+\end_layout
+
+\begin_layout Standard
 El grupo de trabajo IETF 6LoWPAN.
  El IETF( Internet Engineering Task Force) es una gran comunidad internacional
  abierta de diseñadores, operadores, comercializadores e investigadores
- de redes que se ocupan de la evolución de Internet y su buen funcionamiento.
- 38
-\end_layout
+ de redes que se ocupan de la evolución de Internet y su buen funcionamiento
+\begin_inset CommandInset citation
+LatexCommand cite
+key "38"
+literal "false"
 
-\begin_layout Subsubsection
+\end_inset
 
-\lang spanish-mexico
-Principales características.
-\end_layout
-
-\begin_layout Standard
-
-\lang spanish-mexico
-6LowPAN ha sido diseñada para enviar paquetes IPv6 sobre redes IEEE 802.15.4,
- para luego implementar protocolos superiores como TCP, UDP, HTTP, COAP,
- MQTT y websockets.
- Como se puede apreciar en la imagen de abajo, 6LowPAN se encuentra entre
- las capas de enlace y red, pudiendo llegar incluso a la capa de transporte
- compitiendo con otros protocolos que a su vez también incorporan la especificac
-ión 6LowPAN.
- 39
-\end_layout
-
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Topologías.
- 
-\end_layout
-
-\begin_layout Standard
-
-\lang spanish-mexico
-6LowPAN es una red de topología en malla robusta, escalable y auto-regenerativa,
- también puede funcionar en topología de tipo estrella, y en general las
- mismas que el estándar 802.15.4.
- 
+.
 \end_layout
 
 \begin_layout Subsection
-
-\lang spanish-mexico
-Wireless HART.
+Principales características
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Itemize
+IPV6 no fue desarrollado para operar en redes IEEE 802.15.4.
+ La cantidad de información que se podría transportar sería muy pequeña
+ y resultaría ineficiente por la sobrecarga de datos gracias a la transmisión
+ de cabeceras.
+ Por tal motivo, 6LoWPAN proporciona mecanismos de comprensión que permiten
+ reducir su tamaño
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
 
-\lang spanish-mexico
-Descripción.
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+6LoWPAN contiene una función de fragmentación y reensamblaje que permite
+ descomponer los paquetes IPv6 en fragmentos mas pequeños, y así puedan
+ ser transportados de manera transparente para IPv6
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+En las redes LoWPAN, el edge router es el encargado de encaminar el trafico
+ dentro y fuera de la red.
+ Integra dos interfaces distintas (IP y 6LoWPAN) para poder interactuar
+ con dispositivos pertenecientes a distintos dominios y es, por tanto, el
+ responsable del proceso de compresión de las cabeceras de red y transporte.
+ Ademas, emplea una versión modificada del protocolo de descubrimiento de
+ vecinos (ND: Neighbor Discovery) de IPv6 para la gestión y mantenimiento
+ de la red
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Durante el proceso de inicialización, el edge router es el encargado de
+ distribuir el prefijo que los nodos emplean para generar sus direcciones
+ de red.
+ Para ello, responde a los RS (Router Solicitation) enviados por los nodos
+ con RA (Router Advertisement).
+ La respuesta del edge router, ademas de contener el prefijo, proporciona
+ información adicional sobre la red.
+ Una vez completado el proceso de autoconfiguración, todos los nodos de
+ la red deberán registrarse en el edge router mediante el uso de los mensajes
+ Neighbor Solicitation/Neighbor Advertisement (NS/NA).
+ Con este proceso, el edge router lleva a cabo la detección de posibles
+ direcciones duplicadas y almacena información sobre los nodos
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Los hosts, son los dispositivos mas sencillos de la red.
+ No requieren estar siempre activos como los routers por lo que es posible
+ implementar en ellos estrategias de bajo consumo para el ahorro energético.
+ No existe un único método para su gestión, cada uno de los fabricantes
+ que implementa la tecnología 6LoWPAN propone sus propios mecanismos
+\begin_inset CommandInset citation
+LatexCommand cite
+key "49"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Topologías
 \end_layout
 
 \begin_layout Standard
+Una red LowPAN es una colección de nodos que comparten el mismo prefijo
+ de red.
+ Existen tres tipos de arquitecturas de red:
+\end_layout
 
-\lang spanish-mexico
+\begin_layout Enumerate
+LoWPAN-Simple: Red que dispone de un solo edge router
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+LoWPAN-Extendida: Red con varios edge routers, habitual en aplicaciones
+ de movilidad o con un gran numero de nodos.
+ Pueden adicionalmente formar una subred con otros dispositivos IP
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+LoWPAN-ad-hoc: Red que no esta conectada a internet.
+ Uno de los routers se configura para que actúe como un edge router
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Una red 6LoWPAN cuenta con tres tipos de dispositivos principalmente: 
+\end_layout
+
+\begin_layout Itemize
+Edge-router: Es un dispositivo frontera que se encuentra conectado a una
+ red IPv6 y a una red LowPAN.
+ Se encarga de intercambio de datos entre: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Dispositivos 6LoWPAN e Internet
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Dispositivos dentro de la red 6LoWPAN
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Generación y mantenimiento de la red
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Router: Se encargan de direccionar los datos desde su destino hacia otro
+ nodo dentro de la red
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Host: Son dispositivos finales y no son capaces de efectuar tareas de enrutamien
+to de datos hacia otros dispositivos en red
+\begin_inset CommandInset citation
+LatexCommand cite
+key "39"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-6LoWPAN topology.jpg
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Topología 6LoWPAN
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Wireless HART
+\end_layout
+
+\begin_layout Subsection
+Descripción
+\end_layout
+
+\begin_layout Standard
 WirelessHART es un estándar (62591) global aprobado por la IEC que especifica
  una tecnología de malla interoperable auto-organizada en el cual los dispositiv
 os de la red inalámbrica mitigan obstáculos en el ambiente del proceso,
  posee excelentes habilidades para el control y monitoreo, con una gran
- confiabilidad.
- 40
+ confiabilidad
+\begin_inset CommandInset citation
+LatexCommand cite
+key "40"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Historia.
+\begin_layout Subsection
+Historia
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 El estándar comenzó en el 2004 y fue desarrollado por 37 empresas de la
  fundación de comunicaciones HART (HCF), entre las empresas pertenecientes
  se encuentran: Emerson, Pepperl y Siemens.
  WirelessHART fue aprobada por la junta directiva de la fundación en el
  año 2007, posteriormente en el 2009 WirelessHART fue aprobado por la Comisión
- Electrotécnica Internacional (IEC).
- 41
+ Electrotécnica Internacional (IEC)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "41"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Organismo que lo desarrolla o regula.
- 
+\begin_layout Subsection
+Organismo que lo desarrolla o regula
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 FieldComm Group es propietario de las especificaciones HART y proporciona
  servicios de registro de productos, capacitación y desarrollo de especificacion
-es asociados con la tecnología.
- 42 6.3 Principales características: WirelessHART es un protocolo basado
- en la especificación IEEE 802.15.4 en las capas bajas del modelo OSI, al
- igual que Zigbee o ISA 100, cubriendo la especificación de las capas superiores.
- La característica principal de este protocolo es su bajo consumo, lo que
- le permite ser usado en dispositivos alimentados por baterías sin agotarse
- en un corto periodo de tiempo.
- 43
+es asociados con la tecnología
+\begin_inset CommandInset citation
+LatexCommand cite
+key "42"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Principales características
 \end_layout
 
 \begin_layout Standard
+El protocolo WirelessHART fue desarrollado para satisfacer las demandas
+ de las aplicaciones de automatización industrial.
+ El protocolo es totalmente compatible con dispositivos certificados HART
+ anteriores y se puede utilizar para actualizar dispositivos cableados más
+ antiguos a través de adaptadores.
+ Utiliza la capa física IEEE 802.15.4 con el nivel global banda ISM de 2,4
+ GHz con licencia gratuita.
+ La capa de red se basa en un mecanismo TDMA (acceso múltiple por división
+ de tiempo) para arbitrar y coordinar las transacciones entre los nodos
+ de la red
+\begin_inset CommandInset citation
+LatexCommand cite
+key "43"
+literal "false"
 
-\lang spanish-mexico
-(IMAGEN) relación entre WirelessHART y el modelo OSI.
- 43
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Subsubsection
-
-\lang spanish-mexico
-Topologías.
- 
+\begin_layout Subsection
+Topologías
 \end_layout
 
 \begin_layout Standard
-
-\lang spanish-mexico
 WirelessHART utiliza una red mallada plana en la que todas las estaciones
  de radio (dispositivos de campo) forman una red.
  Todas las estaciones actúan simultáneamente como fuente de señal y repetidor.
- 44 El transmisor original envía un mensaje a su vecino más próximo, que
- a su vez transmite el mensaje hasta que llega a la estación base y al receptor.
+ El transmisor original envía un mensaje a su vecino más próximo, que a
+ su vez transmite el mensaje hasta que llega a la estación base y al receptor.
  Además, se configuran rutas alternativas en la fase de inicialización.
  Si el mensaje no se puede transmitir en una ruta concreta por causa de
- un obstáculo o un receptor defectuoso, el mensaje se transmite automáticamente
- a una ruta alternativa.
+ algún obstáculo o un receptor defectuoso, el mensaje se transmite automáticamen
+te a una ruta alternativa.
  Además de ampliar el rango de la red, la red mallada plana proporciona
  rutas de comunicación redundantes que aumentan la fiabilidad de la transmisión.
- 44
+\begin_inset CommandInset citation
+LatexCommand cite
+key "40"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
 
-\lang spanish-mexico
-(IMAGEN) Topología de red mallada WirelessHART 44
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Imagenes/Diagramas-WirelessHART.jpg
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Plain Layout
+\begin_inset Caption Standard
 
-\lang spanish-mexico
-Bibliotecas para el desarrollo de aplicaciones.
+\begin_layout Plain Layout
+Topología de red mallada WirelessHART
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bibliotecas para el desarrollo de aplicaciones
 \end_layout
 
 \begin_layout Itemize
-
-\lang spanish-mexico
 SmartMesh SDK: Smart Mesh SDK es un paquete de Python que simplifica la
  integración de una red SmartMesh IP o SmartMesh WirelessHART en su aplicación.
  Implementa la interfaz de programación de aplicaciones (API) del dispositivo
  al que está conectado.
  Se incluye un conjunto de aplicaciones de muestra en SmartMesh SDK, lo
  que permite al programador comprender rápidamente la API y usarla como
- parte de un sistema más grande.
- 45
+ parte de un sistema más grande
+\begin_inset CommandInset citation
+LatexCommand cite
+key "45"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Section
+\begin_layout Chapter
 Evaluación del desempeño de tecnologías de comunicación para IoT 
 \end_layout
 
 \begin_layout Standard
-Evaluar el jitter de una conexión es importante, ya que es una variación
- en la demora entre los paquets enviados atraves de esta.
- En pocas palabras, un jitter alto, introduce inconsistencias, lo cual interfier
-e con la calidad de la comunicación y la velocidad de la transferencia de
- datos.
+Evaluar el jitter de una conexión es 
+\lang spanish
+importante
+\lang spanish-mexico
+, ya 
+\lang spanish
+que
+\lang spanish-mexico
+ es 
+\lang spanish
+una
+\lang spanish-mexico
+ variación en la 
+\lang piedmontese
+demora
+\lang spanish-mexico
+ entre los paquetes 
+\lang spanish
+enviados
+\lang spanish-mexico
+ a través de esta.
+ En pocas palabras, un jitter alto, introduce inconsistencias, lo 
+\lang spanish
+cual
+\lang spanish-mexico
+ interfiere con la calidad de la comunicación y la velocidad de la transferencia
+ de datos.
  
 \end_layout
 
@@ -1602,22 +2526,22 @@ s.
  escogidos a evaluar.
  Todas la aplicaciones fueron creadas con el lenguaje C, bajo el ambiente
  de Linux.
- Para algunos protocolos solo se necesitaron algunas librerias especializadas,
+ Para algunos protocolos solo se necesitaron algunas librerías especializadas,
  mientras que en otros, como en LoRa, fue necesaria una integración.
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 A continuación se muestra una descripción detallada de la aplicación que
  se creo para cada protocolo.
 \end_layout
 
-\begin_layout Subsection
-Descripción, instalación y configuración.
+\begin_layout Section
+Descripción, instalación y configuración
 \end_layout
 
 \begin_layout Standard
-El codigo utilizado en los experimentos se encuentra publicado en github:
+El código utilizado en los experimentos se encuentra publicado en Github:
  
 \end_layout
 
@@ -1626,19 +2550,19 @@ https://github.com/floresBe/network_performance.
  
 \end_layout
 
-\begin_layout Subsubsection
-Wi-fi (Paquetes UDP).
+\begin_layout Subsection
+Wi-fi (Paquetes UDP)
 \end_layout
 
 \begin_layout Paragraph
-Descripción.
+Descripción
 \end_layout
 
 \begin_layout Standard
 En la programación en C, un socket es un "enchufe" con el cual se crea una
  conexión con otro ordenador en la que se permite intercambiar datos.
  Para la evaluación de este protocolo, se creo una aplicación cliente-servidor,
- la cual, con la ayuda de la libreria <sys/socket.h> (parte de la biblioteca
+ la cual, con la ayuda de la librería <sys/socket.h> (parte de la biblioteca
  GNU de C) , se utilizaron sockets de tipo UDP para crear conexiones entre
  dos nodos.
  
@@ -1743,7 +2667,7 @@ El programa servidor se define con la siguiente estructura:
 \end_layout
 
 \begin_layout Enumerate
-Crea un socket con el protocolo para poder establecer comunicación con algun
+Crea un socket con el protocolo para poder establecer comunicación con algún
  cliente.
 \end_layout
 
@@ -1754,7 +2678,7 @@ Crea un socket con el protocolo para poder establecer comunicación con algun
 
 \end_deeper
 \begin_layout Enumerate
-Escucha hasta que un cliente le envia información atraves de la conexión.
+Escucha hasta que un cliente le envía información a través de la conexión.
  
 \end_layout
 
@@ -1779,8 +2703,7 @@ sendto(sockfd, (char *)message_json, MAXLINE, 0, (const struct sockaddr
 
 \end_deeper
 \begin_layout Paragraph
-Instalación y configuración.
- 
+Instalación y configuración
 \end_layout
 
 \begin_layout Standard
@@ -1791,28 +2714,27 @@ Para realizar el experimento, fue necesaria una red wifi utilizando un modem,
 
 \begin_layout Standard
 Ejecutar el programa servidor en una de las computadoras inicia el experimento,
- despues de ejecutarse se queda a la espera de algun cliente que quiera
+ después de ejecutarse se queda a la espera de algún cliente que quiera
  enviarle información; a continuación se ejecuta el programa cliente en
- la otra computadora incluyendo utilizando los parametros: server_name size_mess
+ la otra computadora incluyendo utilizando los parámetros: server_name size_mess
 age number_packages, se crea la conexión y comienza el envío de mensajes.
- Al fnalizar, el cliente creara reportes con la información obtenida del
+ Al finalizar, el cliente creara reportes con la información obtenida del
  jitter y tasa de paquetes perdidos durante la conexión.
 \end_layout
 
-\begin_layout Subsubsection
-Bluetooth.
+\begin_layout Subsection
+Bluetooth
 \end_layout
 
 \begin_layout Paragraph
-Descripción.
- 
+Descripción
 \end_layout
 
 \begin_layout Standard
 Para evaluar el protocolo de comunicación Bluetooth, se realizo una aplicación
  que se conforma por dos archivos .c, Server_Bluetooth.c (Servidor) y Client_Bluet
 ooth.c (Cliente).
- Ambos utilizan la libreria BlueZ, una potente pila de comunicaciones Bluetooth
+ Ambos utilizan la librería BlueZ, una potente pila de comunicaciones Bluetooth
  con amplias APIs que permite al usuario aprovechar al máximo todos los
  recursos Bluetooth locales.
 \end_layout
@@ -1830,7 +2752,7 @@ BlueZ proporciona soporte para las capas y protocolos centrales de Bluetooth.
 \end_layout
 
 \begin_layout Paragraph
-Diseño de experimento.
+Diseño de experimento
 \end_layout
 
 \begin_layout Subparagraph
@@ -1950,7 +2872,7 @@ socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
 
 \end_deeper
 \begin_layout Enumerate
-Escucha hasta que un cliente pide establecer conexion.
+Escucha hasta que un cliente pide establecer conexión.
  
 \end_layout
 
@@ -1983,7 +2905,7 @@ void callback_function(char buf[MAXLINE], int client);
 
 \end_deeper
 \begin_layout Paragraph
-Instalación y configuración.
+Instalación y configuración
 \end_layout
 
 \begin_layout Standard
@@ -1994,16 +2916,16 @@ Para realizar el experimento, fueron necesarias dos computadoras con un
 
 \begin_layout Standard
 Ejecutar el programa servidor en una de las computadoras inicia el experimento,
- despues de ejecutarse se queda a la espera de algun cliente que quiera
+ después de ejecutarse se queda a la espera de algún cliente que quiera
  enviarle información; a continuación se ejecuta el programa cliente en
- la otra computadora incluyendo utilizando los parametros: device_name size_mess
+ la otra computadora incluyendo utilizando los parámetros: device_name size_mess
 age number_packages, se crea la conexión y comienza el envío de mensajes.
- Al fnalizar, el cliente creara reportes con la información obtenida del
+ Al finalizar, el cliente creara reportes con la información obtenida del
  jitter y tasa de paquetes perdidos durante la conexión.
 \end_layout
 
-\begin_layout Subsubsection
-ZigBee.
+\begin_layout Subsection
+ZigBee
 \end_layout
 
 \begin_layout Paragraph
@@ -2016,12 +2938,12 @@ Para medir la calidad de un enlace de red de dispositivos ZigBee, se realizo
  una aplicación en lenguaje C y se conforma por dos archivos: Server_ZigBee.c
  (Servidor) y Client_ZigBee.c (Cliente).
  Cada programa se comunica con un dispositivo ZigBee (Digi XBee®) a través
- de un puerto serial/USB y con la ayuda de la libreria <xbee.h>.
+ de un puerto serial/USB y con la ayuda de la librería <xbee.h>.
  
 \end_layout
 
 \begin_layout Paragraph
-Diseño de experimento.
+Diseño de experimento
 \end_layout
 
 \begin_layout Subparagraph
@@ -2178,13 +3100,13 @@ void callback_function(struct xbee *xbee, struct xbee_con *con, struct xbee_pkt
 
 \end_deeper
 \begin_layout Paragraph
-Instalación y configuración.
+Instalación y configuración
 \end_layout
 
 \begin_layout Standard
 Para realizar el experimento, fueron necesarias dos computadoras con un
  sistema operativo Linux instalado, en este caso se utilizo Ubuntu.
- Los dispositivos se deben configurar segun la funcion a ejecutar y para
+ Los dispositivos se deben configurar según la función a ejecutar y para
  esto se utiliza XCTU, una aplicación multiplataforma gratuita diseñada
  para que los desarrolladores puedan interactuar con los módulos RF de Digi
  a través de una interfaz gráfica.
@@ -2245,41 +3167,41 @@ P4, tampoco es necesario que esté activada la entrada de datos.
 \end_layout
 
 \begin_layout Itemize
-SC, si el CH (operating channel) no es el mismo, SC(Scan Channels) debera
+SC, si el CH (operating channel) no es el mismo, SC(Scan Channels) deberá
  permitir todos los canales con el valor FFFF.
  
 \end_layout
 
 \begin_layout Standard
 Ejecutar el programa servidor en una de las computadoras inicia el experimento,
- despues de ejecutarse este se conecta con el dispositivo, se configura
- la conexión con el cliente y se queda en espera de algun mensaje de este.
+ después de ejecutarse este se conecta con el dispositivo, se configura
+ la conexión con el cliente y se queda en espera de algún mensaje de este.
  Al ejecutar el cliente, de igual manera se conecta con el dispositivo,
- despues configura la conexión con el servidor, una vez establecida la conexión
+ después configura la conexión con el servidor, una vez establecida la conexión
  comienza el envío de mensajes.
- Al fnalizar, el cliente creara reportes con la información obtenida del
+ Al finalizar, el cliente creara reportes con la información obtenida del
  jitter y tasa de paquetes perdidos durante la conexión.
 \end_layout
 
-\begin_layout Subsubsection
-Lora.
+\begin_layout Subsection
+Lora
 \end_layout
 
 \begin_layout Paragraph*
-Descripción.
+Descripción
 \end_layout
 
 \begin_layout Standard
 La aplicación para evaluar al protocolo LoRa esta compuesta por tres programas,
- dos de ellos, Sender y Receiver, estan desarrollados para trabajar con
+ dos de ellos, Sender y Receiver, están desarrollados para trabajar con
  placas Arduino UNO en conjunto con un modulo Ra-01 LoRa desarrollado por
  la compañía Ai-Thinker, el tercer programa se desarrollo en el lenguaje
- c, el cual, a traves de un puerto serial, se comunica con la placa arduino
+ c, el cual, a a través de un puerto serial, se comunica con la placa arduino
  para recibir los datos calculados por los programas que corren en las placas.
 \end_layout
 
 \begin_layout Paragraph
-Diseño de experimento.
+Diseño de experimento
 \end_layout
 
 \begin_layout Subparagraph
@@ -2352,7 +3274,7 @@ LoRa.onReceive(onReceive);
 
 \end_deeper
 \begin_layout Enumerate
-Recibe por puerto serial los parametros para ejecutar el experimento.
+Recibe por puerto serial los parámetros para ejecutar el experimento.
 \end_layout
 
 \begin_deeper
@@ -2370,7 +3292,7 @@ message = "";
 
 \end_deeper
 \begin_layout Enumerate
-Se crea y envia el mensaje al receiver.
+Se crea y envía el mensaje al receiver.
 \end_layout
 
 \begin_deeper
@@ -2414,7 +3336,7 @@ Verifica argumentos.
 
 \end_deeper
 \begin_layout Enumerate
-Los datos size_message y number_packages se envian por puerto serial para
+Los datos size_message y number_packages se envían por puerto serial para
  iniciar el experimento.
 \end_layout
 
@@ -2451,8 +3373,7 @@ create_gnu_files(rate,jitter);
 
 \end_deeper
 \begin_layout Paragraph
-Instalación y configuración.
- 
+Instalación y configuración
 \end_layout
 
 \begin_layout Standard
@@ -2460,27 +3381,35 @@ Para realizar el experimento, fue necesaria una computadora con un sistema
  operativo Linux instalado, en este caso se utilizo Ubuntu.
  En la computadora se instalo el programa seria_port.c y se conecto la placa
  arduino con el programa sender.ino instalado, el segundo arduino, con el
- programa rece.ino instalado, se conecto a una fuente de energia para que
+ programa rece.ino instalado, se conecto a una fuente de energía para que
  se pueda ejecutar el programa.
  Una vez que ambos arduinos son conectados a la fuente de poder, comienza
  la ejecución de los programas, para inicializar el experimento se ejecuta
- el programa serial_port incluyendo los parametros de tamaño y cantidad
+ el programa serial_port incluyendo los parámetros de tamaño y cantidad
  de mensajes.
  Al terminar, el programa mostrara en consola los datos obtenidos del experiment
-o y habra realizado los archivos de texto para graficar con gnu.
+o y habrá realizado los archivos de texto para graficar con gnu.
  
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Section
 Resultados.
 \end_layout
 
-\begin_layout Section
+\begin_layout Chapter
 Conclusiones y trabajo futuro
 \end_layout
 
-\begin_layout Section
-Referencias
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintAll"
+bibfiles "Referencias"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body

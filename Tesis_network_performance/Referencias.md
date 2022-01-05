@@ -7,13 +7,14 @@ A Review of Wireless Technology Usage for Mobile Robot Controller
 2. Cueto García, C. (2019, 21 junio). 20 años de conexiones inalámbricas. IDG Communications S.A.U. Recuperado 12 de abril de 2021, de https://www.computerworld.es/tecnologia/20-anos-de-conexiones-inalambricas
 
 3. Wi-Fi Alliance. (s. f.). Who We Are | Wi-Fi Alliance. Recuperado 12 de abril de 2021, de https://www.wi-fi.org/who-we-are
+
 Corporación Intel. (2021, 26 marzo). Resumen del protocolo Wi-Fi IEEE 802.11 [Grafico]. Recuperado de https://www.intel.com/content/www/us/en/support/articles/000005725/wireless/legacy-intel-wireless-products.html#legacy
 
 4. García, R. (2021, 1 marzo). Qué es el WiFi y cómo funciona para conectar todo a Internet. ADSLZone. Reuperado de https://www.adslzone.net/reportajes/tecnologia/que-es-wifi-como-funciona/
 
 5. García, A. (2020, 25 mayo). El WiFi cambia de nombre: 802.11ac ahora es Wi-Fi 5 y 802.11ax es Wi-Fi 6. Recuperado 12 de abril de 2021, de https://www.adslzone.net/2018/10/03/wifi-6-nuevos-nombres/
 
-6. Anguís Horno, J. J. (2008). Capítulo 2 - Familia IEEE 802.11. En Redes de Área Local Inalámbricas: Diseño de la WLAN de Wheelers Lane Technology College (1.a ed., Vol. 1, pp. 26–76). Sevilla, España. Recuperado 12 de abril de 2021, de http://bibing.us.es/proyectos/abreproy/11579   
+6. Anguís Horno, J. J. (2008). Redes de Área Local Inalámbricas: Diseño de la WLAN de Wheelers Lane Technology College (1.a ed., Vol. 1, pp. 26–76). Sevilla, España. Recuperado 12 de abril de 2021, de http://bibing.us.es/proyectos/abreproy/11579   
 
 7. Lorenzo, J. A. (2020, 20 agosto). Conoce todo sobre Wi-Fi HaLow, el estándar Wi-Fi para IoT. Recuperado 12 de abril de 2021, de https://www.redeszone.net/tutoriales/redes-wifi/wi-fi-halow-estandar-que-es-iot/
 
@@ -34,7 +35,7 @@ Corporación Intel. (2021, 26 marzo). Resumen del protocolo Wi-Fi IEEE 802.11 [G
 
 15. Bluetooth SIG. (s. f.). Learn about the history of and people behind the bluetooth SIG. Recuperado 12 de abril de 2021, de https://www.bluetooth.com/about-us/
 
-16. E-Reading. (s. f.). Capitulo 2: Bluetooth. Recuperado 12 de abril de 2021, de http://bibing.us.es/proyectos/abreproy/11972/fichero/Cap%C3%ADtulo+2+-+Bluetooth.pdf
+16. E-Reading. (s. f.). Capitulo 2: Bluetooth. Recuperado 12 de abril de 2021, https://biblus.us.es/bibing/proyectos/abreproy/11972/
 
 17. Bluez - Rust. (s. f.). Recuperado 18 de abril de 2021, de https://docs.rs/bluez/0.3.1/bluez/ 
 
@@ -74,9 +75,9 @@ Corporación Intel. (2021, 26 marzo). Resumen del protocolo Wi-Fi IEEE 802.11 [G
 
 35. HelTecAutomation. (s. f.). ESP32_LoRaWAN. Recuperado 18 de abril de 2021, de https://github.com/HelTecAutomation/ESP32_LoRaWAN
 
-36. IEEE. (s. f.-a). IEEE 802.15.4a-2007 - IEEE Standard for Information technology-- Local and metropolitan area networks-- Specific requirements-- Part 15.4: Wireless Medium Access Control (MAC) and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal Area Networks (WPANs): Amendment 1: Add Alternate PHYs. Recuperado 14 de abril de 2021, de https://standards.ieee.org/standard/802_15_4a-2007.html
+36. A Survey on 6LowPAN & its Future Research Challenges. https://www.researchgate.net/profile/Khalid-Fakieh/publication/282668340_A_Survey_on_6LowPAN_its_Future_Research_Challenges/links/564f5b1b08aefe619b11d839/A-Survey-on-6LowPAN-its-Future-Research-Challenges.pdf 
 
-37. EETimes. (2011, 30 mayo). EETimes - 6LoWPAN: The wireless embedded Internet - Part 2: 6LoWPAN history, market perspective & applications. Recuperado 14 de abril de 2021, de https://www.eetimes.com/6lowpan-the-wireless-embedded-internet-part-2-6lowpan-history-market-perspective-applications/
+37. A Survey on 6LowPAN & its Future Research Challenges. https://www.researchgate.net/profile/Khalid-Fakieh/publication/282668340_A_Survey_on_6LowPAN_its_Future_Research_Challenges/links/564f5b1b08aefe619b11d839/A-Survey-on-6LowPAN-its-Future-Research-Challenges.pdf 
 
 38. IETF. Internet Engineering Task Force. (2018, 21 diciembre). About the IETF. Recuperado 14 de abril de 2021, de https://www.internetsociety.org/es/about-the-ietf/
 
@@ -90,7 +91,8 @@ Corporación Intel. (2021, 26 marzo). Resumen del protocolo Wi-Fi IEEE 802.11 [G
 
 43. INCIBE. (2019, 27 febrero). Aplicando seguridad en WirelessHART. Recuperado 15 de abril de 2021, de https://www.incibe-cert.es/blog/aplicando-seguridad-wirelesshart
 
-44. Pepperl. (2015, 15 enero). WirelessHART - Tecnología inalámbrica | Soluciones de interface HART. Recuperado 15 de abril de 2021, de https://www.pepperl-fuchs.com/mexico/es/10028.htm
+44. When HART Goes Wireless: Understanding and Implementing the
+WirelessHART Standard. 
 
 45. Watteyne, T. (2014, 24 octubre). SmartMesh SDK - confluence. Recuperado 18 de abril de 2021, de https://dustcloud.atlassian.net/wiki/spaces/SMSDK/overview
 
